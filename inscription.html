@@ -607,17 +607,29 @@
   // ── CONFIG ── Remplacer par votre URL Apps Script après déploiement
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbztDy9LxShVHeRJpdvsEUa84eVh1kiqaDra6V_k0XbxoiiV3Pcm3XIMx2hbsZE4f_BX/exec";
 
-  // Photo preview
-  document.getElementById('photo-input').addEventListener('change', function(e) {
+ // ── Prévisualisation + compression dès la sélection ──────────────
+  document.getElementById('photo-input').addEventListener('change', async function(e) {
     const file = e.target.files[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(ev) {
-      document.getElementById('preview-img').src = ev.target.result;
-      document.getElementById('upload-placeholder').style.display = 'none';
-      document.getElementById('photo-preview').style.display = 'block';
-    };
-    reader.readAsDataURL(file);
+
+    // Vérification taille avant compression
+    if (file.size > 5 * 1024 * 1024) {
+      alert('La photo est trop lourde (max 5 Mo). Veuillez en choisir une autre.');
+      e.target.value = '';
+      return;
+    }
+
+    // Compression → max 400px, qualité 80%
+    const dataUrl = await compressImage(file, 400, 0.8);
+
+    // Aperçu
+    document.getElementById('preview-img').src = dataUrl;
+    document.getElementById('upload-placeholder').style.display = 'none';
+    document.getElementById('photo-preview').style.display = 'block';
+
+    // Stocker pour l'envoi (base64 sans le préfixe "data:image/jpeg;base64,")
+    photoMimeType = "image/jpeg";
+    photoBase64   = dataUrl.split(',')[1];
   });
 
   // Form submission
@@ -673,7 +685,10 @@
       disponibilite: form.disponibilite.value,
       type_service: form.type_service.value,
       statut: "EN ATTENTE",
-      date_inscription: new Date().toLocaleDateString('fr-FR')
+      date_inscription: new Date().toLocaleDateString('fr-FR'),
+       // ← champs photo (vides si pas de photo choisie)
+      photo_base64:  photoBase64,
+      photo_mime:    photoMimeType
     };
 
     try {

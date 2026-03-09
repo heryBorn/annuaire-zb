@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-09T20:23:53.227Z"
+last_updated: "2026-03-09T20:28:25.370Z"
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 3
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -23,9 +23,9 @@ See: .planning/PROJECT.md (updated 2026-03-09)
 ## Current Position
 
 Phase: 1 of 6 (Scaffold)
-Plan: 1 of 6 in current phase
+Plan: 3 of 6 in current phase
 Status: In progress
-Last activity: 2026-03-09 — Completed 01-01: CRA bootstrap
+Last activity: 2026-03-09 — Completed 01-03: React Router v6 routing skeleton and page stubs
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -47,6 +47,7 @@ Progress: [░░░░░░░░░░] 0%
 - Trend: —
 
 *Updated after each plan completion*
+| Phase 01-scaffold P03 | 2 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -62,6 +63,8 @@ Recent decisions affecting current work:
 - [Phase 5]: no-cors POST — show success screen on fetch resolve, never read response.ok or response.json()
 - [Phase 01-scaffold]: CRA subdirectory pattern: annuaire-zb-react/ lives inside existing static site repo — existing HTML pages untouched
 - [Phase 01-scaffold]: .env excluded from .gitignore in CRA subdir — CRA only excludes .env.local by default, must explicitly add .env
+- [Phase 01-scaffold]: React Router v6 syntax (Routes/element) — no Switch or component prop
+- [Phase 01-scaffold]: FontAwesome SVG-only (4 packages) — no CSS injection, Tailwind-safe
 
 ### Pending Todos
 
@@ -75,5 +78,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-09
-Stopped at: Completed 01-01-PLAN.md — CRA bootstrap complete, ready for 01-02 (Tailwind)
+Stopped at: Completed 01-03-PLAN.md — routing skeleton and page stubs complete, ready for Phase 2
 Resume file: None

@@ -8,10 +8,10 @@
 ### Scaffold
 
 - [x] **SCAF-01**: App bootstrapped with Create React App as a single-page application
-- [ ] **SCAF-02**: React Router v6 with two routes: `/` (directory) and `/inscription` (registration)
+- [x] **SCAF-02**: React Router v6 with two routes: `/` (directory) and `/inscription` (registration)
 - [ ] **SCAF-03**: TailwindCSS configured with custom earthy color tokens (soil, terracotta, sand, wheat, sage, cream, ink, muted)
 - [ ] **SCAF-04**: Google Fonts (Playfair Display, DM Sans) loaded in public/index.html
-- [ ] **SCAF-05**: FontAwesome SVG React packages installed and available for use throughout the app
+- [x] **SCAF-05**: FontAwesome SVG React packages installed and available for use throughout the app
 - [x] **SCAF-06**: Google Apps Script URL loaded from REACT_APP_SHEET_API_URL environment variable (not hardcoded)
 - [x] **SCAF-07**: Logo asset (logo_zb_trans.png) available in public/images/
 
@@ -80,10 +80,10 @@
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | SCAF-01 | Phase 1 | Complete |
-| SCAF-02 | Phase 1 | Pending |
+| SCAF-02 | Phase 1 | Complete |
 | SCAF-03 | Phase 1 | Pending |
 | SCAF-04 | Phase 1 | Pending |
-| SCAF-05 | Phase 1 | Pending |
+| SCAF-05 | Phase 1 | Complete |
 | SCAF-06 | Phase 1 | Complete |
 | SCAF-07 | Phase 1 | Complete |
 | LAYT-01 | Phase 2 | Pending |

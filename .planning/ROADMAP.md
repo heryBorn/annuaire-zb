@@ -31,7 +31,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. `process.env.REACT_APP_SHEET_API_URL` resolves to the correct value in browser JS (not `undefined`)
   4. FontAwesome icon renders visibly in a test component without a global CSS import
   5. Google Fonts (Playfair Display, DM Sans) load from `public/index.html` with no 404 in the network tab
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Bootstrap CRA, copy logo asset, create .env
+- [ ] 01-02-PLAN.md — Install and configure TailwindCSS + Google Fonts
+- [ ] 01-03-PLAN.md — React Router v6, FontAwesome SVG, route stubs, verification
 
 ### Phase 2: Layout Shell
 **Goal**: A navigable app shell — sticky header with logo and CTA, two route-mounted page stubs — so page-specific work has a target to build into
@@ -97,7 +102,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Scaffold | 0/? | Not started | - |
+| 1. Scaffold | 0/3 | Not started | - |
 | 2. Layout Shell | 0/? | Not started | - |
 | 3. Directory Data and Cards | 0/? | Not started | - |
 | 4. Directory Filters and Modal | 0/? | Not started | - |

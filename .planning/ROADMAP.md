@@ -61,7 +61,12 @@ Plans:
   2. After the fetch completes, member cards display photo, name, title, company, and a colored availability badge
   3. Stats counters (total members, domain count, available count) show accurate numbers derived from the fetched data
   4. If the fetch returns zero members, an empty state message is displayed instead of an empty grid
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 03-01-PLAN.md — Create useMemberFetch hook and AvailabilityBadge component (foundation)
+- [ ] 03-02-PLAN.md — Create MemberCard and SkeletonCard components
+- [ ] 03-03-PLAN.md — Wire DirectoryPage with fetch, stats, grid, and human verify
 
 ### Phase 4: Directory Filters and Modal
 **Goal**: The directory is fully interactive — text search, four dropdown filters, reactive stats, and a member detail modal with accessible keyboard handling
@@ -107,7 +112,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 |-------|----------------|--------|-----------|
 | 1. Scaffold | 3/3 | Complete |  |
 | 2. Layout Shell | 1/1 | Complete    | 2026-03-13 |
-| 3. Directory Data and Cards | 0/? | Not started | - |
+| 3. Directory Data and Cards | 0/3 | Not started | - |
 | 4. Directory Filters and Modal | 0/? | Not started | - |
 | 5. Registration Form | 0/? | Not started | - |
 | 6. Design Polish | 0/? | Not started | - |

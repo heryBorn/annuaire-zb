@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: unknown
-last_updated: "2026-03-13T16:14:05.509Z"
+status: in_progress
+last_updated: "2026-03-13T18:00:00.000Z"
 progress:
-  total_phases: 3
+  total_phases: 6
   completed_phases: 2
-  total_plans: 7
-  completed_plans: 5
+  total_plans: 8
+  completed_plans: 6
 ---
 
 # Project State
@@ -18,16 +18,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-09)
 
 **Core value:** Association members can find and connect with each other by profession, location, and availability — and new members can apply to join.
-**Current focus:** Phase 3 — Directory Data and Cards
+**Current focus:** Phase 4 — Filters (next)
 
 ## Current Position
 
-Phase: 3 of 6 — in progress
-Plan: 2 of 3 complete
-Status: Phase 3 plan 02 complete — MemberCard and SkeletonCard components created
-Last activity: 2026-03-13 — Phase 3 plan 02 complete
+Phase: 3 of 6 — complete
+Plan: 3 of 3 complete
+Status: Phase 3 complete — DirectoryPage with search panel, card redesign, search-first UX
+Last activity: 2026-03-13 — Phase 3 plan 03 complete
 
-Progress: [████░░░░░░] 40%
+Progress: [█████░░░░░] 50%
 
 ## Performance Metrics
 
@@ -75,6 +75,9 @@ Recent decisions affecting current work:
 - [Phase 03-directory-data-and-cards]: aspect-square on photo block (not fixed h-48) — card height never tied to image dimensions
 - [Phase 03-directory-data-and-cards]: MemberCard hover is CSS-only (transition-all + hover:scale-[1.02] + hover:shadow-xl) — no JS state
 - [Phase 03-directory-data-and-cards]: animate-pulse on outer SkeletonCard wrapper — single unified animation less noisy than per-element
+- [Phase 03-directory-data-and-cards]: Search-first UX — cards hidden until Rechercher clicked, mirrors index.html behavior
+- [Phase 03-directory-data-and-cards]: MemberCard uses h-40 photo (not aspect-square), domaine badge, ville+region, bio line-clamp-2, footer links
+- [Phase 03-directory-data-and-cards]: disponibilite removed from card display but kept as search filter (field still on member data)
 
 ### Pending Todos
 
@@ -88,5 +91,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-13
-Stopped at: Completed 03-02-PLAN.md — MemberCard and SkeletonCard components created
+Stopped at: Phase 3 complete — all 3 plans done, commit 41a3675
 Resume file: None

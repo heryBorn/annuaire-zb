@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-03-09)
 ## Current Position
 
 Phase: 3 of 6 — in progress
-Plan: 1 of 3 complete
-Status: Phase 3 plan 01 complete — useMemberFetch hook and AvailabilityBadge created
-Last activity: 2026-03-13 — Phase 3 plan 01 complete
+Plan: 2 of 3 complete
+Status: Phase 3 plan 02 complete — MemberCard and SkeletonCard components created
+Last activity: 2026-03-13 — Phase 3 plan 02 complete
 
-Progress: [███░░░░░░░] 30%
+Progress: [████░░░░░░] 40%
 
 ## Performance Metrics
 
@@ -49,6 +49,7 @@ Progress: [███░░░░░░░] 30%
 *Updated after each plan completion*
 | Phase 01-scaffold P03 | 2 | 2 tasks | 5 files |
 | Phase 03-directory-data-and-cards P01 | 2 | 2 tasks | 2 files |
+| Phase 03-directory-data-and-cards P02 | 2 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -71,6 +72,9 @@ Recent decisions affecting current work:
 - [Phase 02-layout-shell]: Header background is bg-muted (not bg-soil) — bg-soil was too dark visually, changed after human verify
 - [Phase 03-directory-data-and-cards]: Named export for useMemberFetch (not default) — hook convention; consumers use { useMemberFetch }
 - [Phase 03-directory-data-and-cards]: getAvailStyle mirrors index.html availClass() exactly — canonical business rule reference
+- [Phase 03-directory-data-and-cards]: aspect-square on photo block (not fixed h-48) — card height never tied to image dimensions
+- [Phase 03-directory-data-and-cards]: MemberCard hover is CSS-only (transition-all + hover:scale-[1.02] + hover:shadow-xl) — no JS state
+- [Phase 03-directory-data-and-cards]: animate-pulse on outer SkeletonCard wrapper — single unified animation less noisy than per-element
 
 ### Pending Todos
 
@@ -84,5 +88,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-13
-Stopped at: Completed 03-01-PLAN.md — useMemberFetch hook and AvailabilityBadge component created
+Stopped at: Completed 03-02-PLAN.md — MemberCard and SkeletonCard components created
 Resume file: None

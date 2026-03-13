@@ -23,8 +23,8 @@
 ### Directory
 
 - [x] **DIR-01**: Member list fetched from Google Apps Script on page load (`?action=getMembers`)
-- [ ] **DIR-02**: Skeleton card grid displayed while data is loading
-- [ ] **DIR-03**: Member cards rendered in a responsive grid (photo, name, title, company, availability badge)
+- [x] **DIR-02**: Skeleton card grid displayed while data is loading
+- [x] **DIR-03**: Member cards rendered in a responsive grid (photo, name, title, company, availability badge)
 - [ ] **DIR-04**: Stats counters displayed (total members, number of domains, available count)
 - [ ] **DIR-05**: Text search filtering members by name, job title, company, skills, bio
 - [ ] **DIR-06**: Four dropdown filters: city, domain, availability, service type
@@ -89,8 +89,8 @@
 | LAYT-01 | Phase 2 | Complete |
 | LAYT-02 | Phase 2 | Complete |
 | DIR-01 | Phase 3 | Complete |
-| DIR-02 | Phase 3 | Pending |
-| DIR-03 | Phase 3 | Pending |
+| DIR-02 | Phase 3 | Complete |
+| DIR-03 | Phase 3 | Complete |
 | DIR-04 | Phase 3 | Pending |
 | DIR-05 | Phase 4 | Pending |
 | DIR-06 | Phase 4 | Pending |

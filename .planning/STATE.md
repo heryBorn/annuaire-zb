@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-13T12:34:05.383Z"
+last_updated: "2026-03-13T16:14:05.509Z"
 progress:
-  total_phases: 2
+  total_phases: 3
   completed_phases: 2
-  total_plans: 4
-  completed_plans: 4
+  total_plans: 7
+  completed_plans: 5
 ---
 
 # Project State
@@ -18,16 +18,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-09)
 
 **Core value:** Association members can find and connect with each other by profession, location, and availability — and new members can apply to join.
-**Current focus:** Phase 2 — Layout Shell
+**Current focus:** Phase 3 — Directory Data and Cards
 
 ## Current Position
 
-Phase: 1 of 6 ✓ complete — moving to Phase 2 (Layout Shell)
-Plan: 3 of 3 complete
-Status: Phase 1 verified and approved
-Last activity: 2026-03-13 — Phase 1 verified (all 13 automated checks passed, human approved)
+Phase: 3 of 6 — in progress
+Plan: 1 of 3 complete
+Status: Phase 3 plan 01 complete — useMemberFetch hook and AvailabilityBadge created
+Last activity: 2026-03-13 — Phase 3 plan 01 complete
 
-Progress: [██░░░░░░░░] 17%
+Progress: [███░░░░░░░] 30%
 
 ## Performance Metrics
 
@@ -48,6 +48,7 @@ Progress: [██░░░░░░░░] 17%
 
 *Updated after each plan completion*
 | Phase 01-scaffold P03 | 2 | 2 tasks | 5 files |
+| Phase 03-directory-data-and-cards P01 | 2 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -68,6 +69,8 @@ Recent decisions affecting current work:
 - [Phase 02-layout-shell]: Use fixed (not sticky) positioning for header — defensive against overflow ancestors
 - [Phase 02-layout-shell]: Logo via CRA public/ absolute path /images/logo_zb_trans.png — bypasses webpack
 - [Phase 02-layout-shell]: Header background is bg-muted (not bg-soil) — bg-soil was too dark visually, changed after human verify
+- [Phase 03-directory-data-and-cards]: Named export for useMemberFetch (not default) — hook convention; consumers use { useMemberFetch }
+- [Phase 03-directory-data-and-cards]: getAvailStyle mirrors index.html availClass() exactly — canonical business rule reference
 
 ### Pending Todos
 
@@ -81,5 +84,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-13
-Stopped at: Completed 02-01-PLAN.md — Phase 2 Layout Shell complete, header human-verified and approved
+Stopped at: Completed 03-01-PLAN.md — useMemberFetch hook and AvailabilityBadge component created
 Resume file: None

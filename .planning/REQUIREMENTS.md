@@ -22,7 +22,7 @@
 
 ### Directory
 
-- [ ] **DIR-01**: Member list fetched from Google Apps Script on page load (`?action=getMembers`)
+- [x] **DIR-01**: Member list fetched from Google Apps Script on page load (`?action=getMembers`)
 - [ ] **DIR-02**: Skeleton card grid displayed while data is loading
 - [ ] **DIR-03**: Member cards rendered in a responsive grid (photo, name, title, company, availability badge)
 - [ ] **DIR-04**: Stats counters displayed (total members, number of domains, available count)
@@ -88,7 +88,7 @@
 | SCAF-07 | Phase 1 | Complete |
 | LAYT-01 | Phase 2 | Complete |
 | LAYT-02 | Phase 2 | Complete |
-| DIR-01 | Phase 3 | Pending |
+| DIR-01 | Phase 3 | Complete |
 | DIR-02 | Phase 3 | Pending |
 | DIR-03 | Phase 3 | Pending |
 | DIR-04 | Phase 3 | Pending |

@@ -47,7 +47,10 @@ Plans:
   2. The "Rejoindre" button in the header navigates from `/` to `/inscription` via React Router (no browser navigation event)
   3. The ZB logo image is visible in the header on both routes with no 404
   4. The header remains visible and fixed at the top when the page is scrolled
-**Plans**: TBD
+**Plans**: 1 plan
+
+Plans:
+- [ ] 02-01-PLAN.md — Create Header component and wire into App.js (remove Phase 1 banner, add pt-14 compensation)
 
 ### Phase 3: Directory Data and Cards
 **Goal**: The directory page fetches members from Google Apps Script and renders them as a card grid with loading and empty states
@@ -102,8 +105,8 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Scaffold | 2/3 | In Progress|  |
-| 2. Layout Shell | 0/? | Not started | - |
+| 1. Scaffold | 3/3 | Complete |  |
+| 2. Layout Shell | 0/1 | Not started | - |
 | 3. Directory Data and Cards | 0/? | Not started | - |
 | 4. Directory Filters and Modal | 0/? | Not started | - |
 | 5. Registration Form | 0/? | Not started | - |

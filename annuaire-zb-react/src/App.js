@@ -7,7 +7,7 @@ function App() {
   return (
     <BrowserRouter>
       <Header />
-      <div className="pt-14">
+      <div className="pt-16">
         <Routes>
           <Route path="/" element={<DirectoryPage />} />
           <Route path="/inscription" element={<InscriptionPage />} />

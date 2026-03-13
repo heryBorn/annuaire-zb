@@ -1,7 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
-import { useMemberFetch } from '../hooks/useMemberFetch';
 import MemberCard from '../components/MemberCard';
 import SkeletonCard from '../components/SkeletonCard';
 
@@ -24,10 +24,10 @@ const DOMAINES = [
 ];
 
 const DISPOS = [
-  { value: 'Disponible',      label: 'Disponible' },
-  { value: 'Partiellement',   label: 'Partiellement disponible' },
-  { value: 'Non disponible',  label: 'Non disponible' },
-  { value: 'Recherche',       label: 'En recherche' },
+  { value: 'Disponible',     label: 'Disponible' },
+  { value: 'Partiellement',  label: 'Partiellement disponible' },
+  { value: 'Non disponible', label: 'Non disponible' },
+  { value: 'Recherche',      label: 'En recherche' },
 ];
 
 const SERVICES = [
@@ -40,18 +40,32 @@ const SERVICES = [
 
 const SELECT_CLS = 'border border-sand rounded-lg font-sans text-sm text-ink px-3 py-2 focus:outline-none focus:ring-2 focus:ring-terracotta/40 bg-white';
 
-function deriveStats(members) {
-  const total   = members.length;
-  const domains = new Set(members.map(m => m.domaine).filter(Boolean)).size;
-  const villes  = new Set(members.map(m => m.ville).filter(Boolean)).size;
-  return { total, domains, villes };
+function applyFilters(members, { q, domaine, ville, dispo, service }) {
+  return members.filter(m => {
+    const text = [m.nom, m.prenom, m.metier, m.bio, m.competences, m.entreprise]
+      .join(' ').toLowerCase();
+    if (q      && !text.includes(q))                               return false;
+    if (domaine && m.domaine      !== domaine)                      return false;
+    if (ville   && m.ville        !== ville)                        return false;
+    if (dispo   && !(m.disponibilite || '').includes(dispo))        return false;
+    if (service && m.type_service !== service)                      return false;
+    return true;
+  });
 }
 
-function StatCard({ value, label }) {
+function deriveStats(members) {
+  return {
+    total:   members.length,
+    domains: new Set(members.map(m => m.domaine).filter(Boolean)).size,
+    villes:  new Set(members.map(m => m.ville).filter(Boolean)).size,
+  };
+}
+
+function StatInline({ value, label }) {
   return (
-    <div className="bg-white rounded-xl shadow-sm px-6 py-4 text-center">
+    <div className="text-center">
       <p className="font-serif text-3xl font-bold text-soil">{value}</p>
-      <p className="font-sans text-sm text-muted mt-1">{label}</p>
+      <p className="font-sans text-xs text-muted mt-0.5 uppercase tracking-wide">{label}</p>
     </div>
   );
 }
@@ -74,9 +88,7 @@ function NoResults() {
     <div className="col-span-full flex flex-col items-center justify-center py-20 text-center">
       <p className="text-4xl mb-4">😕</p>
       <p className="font-serif text-xl text-muted">Aucun membre trouvé</p>
-      <p className="font-sans text-sm text-muted mt-2">
-        Essayez de modifier ou d'élargir les filtres.
-      </p>
+      <p className="font-sans text-sm text-muted mt-2">Essayez de modifier ou d'élargir les filtres.</p>
     </div>
   );
 }
@@ -90,46 +102,76 @@ function ErrorState({ message }) {
   );
 }
 
-function DirectoryPage() {
-  const { members, loading, error } = useMemberFetch();
-  const stats = useMemo(() => deriveStats(members), [members]);
+// ─── page ────────────────────────────────────────────────────────────────────
 
+function DirectoryPage() {
+  // Filter form state (live — what the user sees in the inputs)
   const [query,         setQuery]         = useState('');
   const [filterDomaine, setFilterDomaine] = useState('');
   const [filterVille,   setFilterVille]   = useState('');
   const [filterDispo,   setFilterDispo]   = useState('');
   const [filterService, setFilterService] = useState('');
-  const [hasSearched,   setHasSearched]   = useState(false);
+
+  // Search result state (explicit — only changes when a fetch completes)
+  const [phase,   setPhase]   = useState('idle'); // 'idle' | 'loading' | 'done' | 'error'
+  const [members, setMembers] = useState([]);
+  const [results, setResults] = useState([]);
+  const [errorMsg, setErrorMsg] = useState('');
+  const fetchId = useRef(0);
+
+  const stats = useMemo(() => deriveStats(members), [members]);
 
   const cities = useMemo(
     () => [...new Set(members.map(m => m.ville).filter(Boolean))].sort(),
     [members]
   );
 
-  const results = useMemo(() => {
-    if (!hasSearched) return [];
-    const q = query.trim().toLowerCase();
-    return members.filter(m => {
-      const text = [m.nom, m.prenom, m.metier, m.bio, m.competences, m.entreprise]
-        .join(' ').toLowerCase();
-      if (q && !text.includes(q)) return false;
-      if (filterDomaine && m.domaine !== filterDomaine) return false;
-      if (filterVille   && m.ville   !== filterVille)   return false;
-      if (filterDispo   && !(m.disponibilite || '').includes(filterDispo)) return false;
-      if (filterService && m.type_service !== filterService) return false;
-      return true;
-    });
-  }, [hasSearched, query, filterDomaine, filterVille, filterDispo, filterService, members]);
+  async function runSearch() {
+    const id = ++fetchId.current;
 
-  function runSearch() { setHasSearched(true); }
+    // Force immediate DOM flush — clears results and shows skeletons before fetch starts
+    flushSync(() => {
+      setPhase('loading');
+      setResults([]);
+      setMembers([]);
+    });
+
+    // Snapshot filter values at click time — avoids stale-closure issues
+    const snap = {
+      q:       query.trim().toLowerCase(),
+      domaine: filterDomaine,
+      ville:   filterVille,
+      dispo:   filterDispo,
+      service: filterService,
+    };
+
+    try {
+      const url = process.env.REACT_APP_SHEET_API_URL + '?action=getMembers';
+      const res = await fetch(url);
+      const data = await res.json();
+      if (id !== fetchId.current) return; // stale — a newer search was started
+      const all = data.members || [];
+      setMembers(all);
+      setResults(applyFilters(all, snap));
+      setPhase('done');
+    } catch (err) {
+      if (id !== fetchId.current) return;
+      setErrorMsg(err.message);
+      setPhase('error');
+    }
+  }
 
   function resetSearch() {
+    fetchId.current++;          // cancel any in-flight fetch
     setQuery('');
     setFilterDomaine('');
     setFilterVille('');
     setFilterDispo('');
     setFilterService('');
-    setHasSearched(false);
+    setPhase('idle');
+    setMembers([]);
+    setResults([]);
+    setErrorMsg('');
   }
 
   const hasFilters =
@@ -138,16 +180,23 @@ function DirectoryPage() {
 
   return (
     <main className="px-6 py-8 max-w-7xl mx-auto">
-      {/* Stats bar */}
-      <div className="grid grid-cols-3 gap-4 mb-8">
-        <StatCard value={loading ? '—' : stats.total}   label="membres" />
-        <StatCard value={loading ? '—' : stats.domains} label="domaines" />
-        <StatCard value={loading ? '—' : stats.villes}  label="villes" />
+      {/* Hero */}
+      <div className="mb-8 text-center">
+        <h1 className="font-serif text-3xl sm:text-4xl font-bold text-ink leading-tight">
+          Trouvez les <em>talents</em><br />de notre région
+        </h1>
+        <p className="font-sans text-sm text-muted mt-3 max-w-lg mx-auto">
+          Découvrez les compétences et savoir-faire de vos voisins. Recherchez un membre par domaine, localité ou disponibilité.
+        </p>
+        <div className="flex justify-center gap-8 mt-6">
+          <StatInline value={phase === 'idle' ? '—' : stats.total}   label="Membres" />
+          <StatInline value={phase === 'idle' ? '—' : stats.domains} label="Domaines" />
+          <StatInline value={phase === 'idle' ? '—' : stats.villes}  label="Villes" />
+        </div>
       </div>
 
-      {/* Search panel — card with shadow */}
+      {/* Search panel */}
       <div className="bg-white rounded-xl shadow-md p-5 mb-8">
-        {/* Text input + search button */}
         <div className="flex gap-2">
           <div className="relative flex-1">
             <FontAwesomeIcon
@@ -171,7 +220,6 @@ function DirectoryPage() {
           </button>
         </div>
 
-        {/* Filter row */}
         <div className="flex flex-wrap gap-2 mt-3">
           <select value={filterDomaine} onChange={e => setFilterDomaine(e.target.value)} className={SELECT_CLS}>
             <option value="">🗂 Tous les domaines</option>
@@ -207,11 +255,11 @@ function DirectoryPage() {
 
       {/* Results */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {error
-          ? <ErrorState message={error} />
-          : loading
+        {phase === 'error'
+          ? <ErrorState message={errorMsg} />
+          : phase === 'loading'
             ? Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)
-            : !hasSearched
+            : phase === 'idle'
               ? <EmptyPrompt />
               : results.length === 0
                 ? <NoResults />

@@ -67,6 +67,7 @@ Recent decisions affecting current work:
 - [Phase 01-scaffold]: FontAwesome SVG-only (4 packages) — no CSS injection, Tailwind-safe
 - [Phase 02-layout-shell]: Use fixed (not sticky) positioning for header — defensive against overflow ancestors
 - [Phase 02-layout-shell]: Logo via CRA public/ absolute path /images/logo_zb_trans.png — bypasses webpack
+- [Phase 02-layout-shell]: Header background is bg-muted (not bg-soil) — bg-soil was too dark visually, changed after human verify
 
 ### Pending Todos
 
@@ -80,5 +81,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-13
-Stopped at: Phase 1 complete and verified — ready to discuss/plan Phase 2 (Layout Shell)
+Stopped at: Completed 02-01-PLAN.md — Phase 2 Layout Shell complete, header human-verified and approved
 Resume file: None

@@ -38,6 +38,7 @@ key-decisions:
   - "Shadow always-on (no scroll listener) — simpler, no JS state in header"
   - "pt-14 wrapper on Routes div matches h-14 header height exactly"
   - "Logo via <img src='/images/logo_zb_trans.png'> — CRA public/ assets bypass webpack"
+  - "Header background changed from bg-soil to bg-muted after visual verification — bg-soil was too dark, bg-muted better matches design intent"
 
 patterns-established:
   - "Header component: no state, no effects — pure presentational"
@@ -59,12 +60,12 @@ completed: 2026-03-13
 - **Duration:** ~5 min
 - **Started:** 2026-03-13T12:20:48Z
 - **Completed:** 2026-03-13T12:25:00Z
-- **Tasks:** 2 of 3 complete (Task 3 is human-verify checkpoint — awaiting approval)
+- **Tasks:** 3 of 3 complete
 - **Files modified:** 2
 
 ## Accomplishments
 
-- Created `Header.jsx` with fixed bg-soil header, ZB logo via public path, and Rejoindre Link to /inscription
+- Created `Header.jsx` with fixed header (bg-muted after visual review), ZB logo via public path, and Rejoindre Link to /inscription
 - Removed Phase 1 verification banner from App.js and replaced with Header component
 - Wrapped Routes in pt-14 to prevent content overlap with fixed header
 - Build passes (`npm run build` exits 0)
@@ -73,7 +74,7 @@ completed: 2026-03-13
 
 1. **Task 1: Create Header component** - `8927358` (feat)
 2. **Task 2: Wire Header into App.js and remove verification banner** - `cd7bf41` (feat)
-3. **Task 3: Human verify** - pending checkpoint approval
+3. **Task 3: Human verify — sticky header navigable end-to-end** - `b2b9277` (fix — approved)
 
 ## Files Created/Modified
 
@@ -89,7 +90,22 @@ completed: 2026-03-13
 
 ## Deviations from Plan
 
-None — plan executed exactly as written. The `components/` directory was auto-created (it did not yet exist) as part of creating `Header.jsx`.
+### Auto-fixed Issues
+
+**1. [Rule 1 - Bug] Header background color changed from bg-soil to bg-muted**
+- **Found during:** Task 3 (human visual verification)
+- **Issue:** bg-soil (#2C1A0E — very dark brown) was visually too dark for the header; bg-muted provides a lighter, more appropriate background
+- **Fix:** Updated Header.jsx className from `bg-soil` to `bg-muted`
+- **Files modified:** annuaire-zb-react/src/components/Header.jsx
+- **Verification:** Human approved after change
+- **Committed in:** b2b9277
+
+---
+
+**Total deviations:** 1 auto-fixed (1 visual correction during human verify)
+**Impact on plan:** Visual improvement only — no structural or behavioral change. No scope creep.
+
+Note: The `components/` directory was also auto-created (it did not yet exist) as part of creating `Header.jsx` — this is expected and not counted as a deviation.
 
 ## Issues Encountered
 
@@ -104,7 +120,7 @@ None — no external service configuration required.
 - Header shell complete and verified to build cleanly
 - Both routes share the same Header component
 - Ready for Phase 3 (Directory Page) and Phase 4 (Inscription Page) content implementation
-- Awaiting human visual verification (Task 3 checkpoint) before marking plan complete
+- Plan fully complete — all 3 tasks approved
 
 ---
 *Phase: 02-layout-shell*

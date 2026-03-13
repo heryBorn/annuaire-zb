@@ -12,7 +12,7 @@ This roadmap covers the migration of Annuaire ZB from static HTML/inline JS to a
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Scaffold** - Bootstrap CRA with TailwindCSS, React Router, FontAwesome, env config, and Google Fonts
+- [x] **Phase 1: Scaffold** - Bootstrap CRA with TailwindCSS, React Router, FontAwesome, env config, and Google Fonts (completed 2026-03-13)
 - [x] **Phase 2: Layout Shell** - Shared sticky header, App routing, two empty page stubs navigable end-to-end (completed 2026-03-13)
 - [ ] **Phase 3: Directory Data and Cards** - Fetch members, render card grid, skeleton loading, availability badge
 - [ ] **Phase 4: Directory Filters and Modal** - Text search, dropdown filters, stats, animated member detail modal
@@ -50,7 +50,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 02-01-PLAN.md — Create Header component and wire into App.js (remove Phase 1 banner, add pt-14 compensation)
+- [x] 02-01-PLAN.md — Create Header component and wire into App.js (remove Phase 1 banner, add pt-14 compensation)
 
 ### Phase 3: Directory Data and Cards
 **Goal**: The directory page fetches members from Google Apps Script and renders them as a card grid with loading and empty states

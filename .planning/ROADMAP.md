@@ -13,7 +13,7 @@ This roadmap covers the migration of Annuaire ZB from static HTML/inline JS to a
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: Scaffold** - Bootstrap CRA with TailwindCSS, React Router, FontAwesome, env config, and Google Fonts
-- [ ] **Phase 2: Layout Shell** - Shared sticky header, App routing, two empty page stubs navigable end-to-end
+- [x] **Phase 2: Layout Shell** - Shared sticky header, App routing, two empty page stubs navigable end-to-end (completed 2026-03-13)
 - [ ] **Phase 3: Directory Data and Cards** - Fetch members, render card grid, skeleton loading, availability badge
 - [ ] **Phase 4: Directory Filters and Modal** - Text search, dropdown filters, stats, animated member detail modal
 - [ ] **Phase 5: Registration Form** - Full form with photo compression, validation, submit feedback, success screen
@@ -106,7 +106,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Scaffold | 3/3 | Complete |  |
-| 2. Layout Shell | 0/1 | Not started | - |
+| 2. Layout Shell | 1/1 | Complete   | 2026-03-13 |
 | 3. Directory Data and Cards | 0/? | Not started | - |
 | 4. Directory Filters and Modal | 0/? | Not started | - |
 | 5. Registration Form | 0/? | Not started | - |

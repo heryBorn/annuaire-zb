@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: phase_complete
-last_updated: "2026-03-13T00:00:00.000Z"
+status: unknown
+last_updated: "2026-03-13T12:23:36.054Z"
 progress:
-  total_phases: 6
-  completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
+  total_phases: 2
+  completed_phases: 2
+  total_plans: 4
+  completed_plans: 4
 ---
 
 # Project State
@@ -65,6 +65,8 @@ Recent decisions affecting current work:
 - [Phase 01-scaffold]: .env excluded from .gitignore in CRA subdir — CRA only excludes .env.local by default, must explicitly add .env
 - [Phase 01-scaffold]: React Router v6 syntax (Routes/element) — no Switch or component prop
 - [Phase 01-scaffold]: FontAwesome SVG-only (4 packages) — no CSS injection, Tailwind-safe
+- [Phase 02-layout-shell]: Use fixed (not sticky) positioning for header — defensive against overflow ancestors
+- [Phase 02-layout-shell]: Logo via CRA public/ absolute path /images/logo_zb_trans.png — bypasses webpack
 
 ### Pending Todos
 

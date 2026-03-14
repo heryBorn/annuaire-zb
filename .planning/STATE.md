@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-14T19:25:12.391Z"
+last_updated: "2026-03-14T19:10:00.000Z"
 progress:
   total_phases: 6
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 15
-  completed_plans: 14
+  completed_plans: 15
 ---
 
 # Project State
@@ -22,12 +22,12 @@ See: .planning/PROJECT.md (updated 2026-03-09)
 
 ## Current Position
 
-Phase: 6 of 6 — in progress
-Plan: 2 of 3 complete
-Status: Phase 6 executing — plans 01–02 complete; plan 03 remaining
-Last activity: 2026-03-14 — Phase 6 plan 02 complete (AvailabilityBadge margin fix, MemberCard metier+badge, MemberModal 300ms, card stagger animation)
+Phase: 6 of 6 — COMPLETE
+Plan: 3 of 3 complete
+Status: All phases complete — v1.0 milestone reached
+Last activity: 2026-03-14 — Phase 6 plan 03 complete (collapsible filter panel, InscriptionPage layout audit, color palette audit)
 
-Progress: [█████████░] 93%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -51,6 +51,7 @@ Progress: [█████████░] 93%
 | Phase 03-directory-data-and-cards P01 | 2 | 2 tasks | 2 files |
 | Phase 03-directory-data-and-cards P02 | 2 | 2 tasks | 2 files |
 | Phase 06-design-polish P02 | 2 | 4 tasks | 4 files |
+| Phase 06-design-polish P03 | 2 | 3 tasks | 1 file |
 
 ## Accumulated Context
 
@@ -99,6 +100,8 @@ Recent decisions affecting current work:
 - [Phase 06-design-polish]: AvailabilityBadge owns no external margin — mt-2 removed; MemberCard uses gap-2, MemberModal uses mt-3 wrapper
 - [Phase 06-design-polish]: MemberModal animation duration locked to 300ms (duration-300) — centered in 250-350ms target range
 - [Phase 06-design-polish]: Stagger delay capped at 400ms: Math.min(index * 50, 400) — cards 8+ share max delay to avoid long waits
+- [Phase 06-design-polish]: max-h-96 (384px) as collapsible panel open value — must use explicit px value (not auto) for CSS max-height transition to animate; md:max-h-none pairs with md:overflow-visible for desktop override
+- [Phase 06-design-polish]: filterOpen initialized to false — collapsed by default on mobile, consistent with mobile-first UX
 
 ### Pending Todos
 
@@ -112,5 +115,5 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-03-14
-Stopped at: Phase 6 plan 02 complete — AvailabilityBadge margin, MemberCard metier+badge, MemberModal 300ms animation, card stagger wired, commits 76446e3 88aa2ee fd27746 2e2902e
+Stopped at: Phase 6 plan 03 complete — collapsible filter panel, InscriptionPage layout audit, color palette audit — commits 5231a58 0a429af; v1.0 milestone complete
 Resume file: None

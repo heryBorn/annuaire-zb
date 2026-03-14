@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Scaffold** - Bootstrap CRA with TailwindCSS, React Router, FontAwesome, env config, and Google Fonts (completed 2026-03-13)
 - [x] **Phase 2: Layout Shell** - Shared sticky header, App routing, two empty page stubs navigable end-to-end (completed 2026-03-13)
 - [ ] **Phase 3: Directory Data and Cards** - Fetch members, render card grid, skeleton loading, availability badge
-- [ ] **Phase 4: Directory Filters and Modal** - Text search, dropdown filters, stats, animated member detail modal
+- [x] **Phase 4: Directory Filters and Modal** - Text search, dropdown filters, stats, animated member detail modal (completed 2026-03-14)
 - [ ] **Phase 5: Registration Form** - Full form with photo compression, validation, submit feedback, success screen
 - [ ] **Phase 6: Design Polish** - Hero section, responsive layout audit, animation tuning, consistent icon usage
 
@@ -118,6 +118,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 1. Scaffold | 3/3 | Complete |  |
 | 2. Layout Shell | 1/1 | Complete    | 2026-03-13 |
 | 3. Directory Data and Cards | 2/3 | In Progress|  |
-| 4. Directory Filters and Modal | 2/3 | In Progress|  |
+| 4. Directory Filters and Modal | 3/3 | Complete   | 2026-03-14 |
 | 5. Registration Form | 0/? | Not started | - |
 | 6. Design Polish | 0/? | Not started | - |

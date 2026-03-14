@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
+import Footer from './components/Footer';
 import DirectoryPage from './pages/DirectoryPage';
 import InscriptionPage from './pages/InscriptionPage';
 
@@ -13,6 +14,7 @@ function App() {
           <Route path="/inscription" element={<InscriptionPage />} />
         </Routes>
       </div>
+      <Footer />
     </BrowserRouter>
   );
 }

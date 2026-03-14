@@ -95,7 +95,11 @@ Plans:
   3. After clicking submit with a valid form, the button enters a loading/disabled state for the duration of the API call
   4. After the fetch resolves (regardless of no-cors response content), the form is replaced by a success confirmation screen
   5. If the fetch rejects (network error), an error message is shown and the form remains editable
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 05-01-PLAN.md — Form shell: photo upload, all fields, two-column layout (REG-01, REG-02)
+- [ ] 05-02-PLAN.md — Submit flow: validation, loading state, success screen, error toast (REG-03, REG-04, REG-05, REG-06)
 
 ### Phase 6: Design Polish
 **Goal**: All pages and components have a production-quality visual finish — earthy palette applied consistently, responsive layout verified on mobile, hero section and animations in place
@@ -119,5 +123,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 2. Layout Shell | 1/1 | Complete    | 2026-03-13 |
 | 3. Directory Data and Cards | 2/3 | In Progress|  |
 | 4. Directory Filters and Modal | 3/3 | Complete   | 2026-03-14 |
-| 5. Registration Form | 0/? | Not started | - |
+| 5. Registration Form | 0/2 | Not started | - |
 | 6. Design Polish | 0/? | Not started | - |

@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot, faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons';
 import { faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import AvailabilityBadge from './AvailabilityBadge';
 
 // Drive's /uc and /thumbnail URLs redirect → ORB blocks them in-app.
 // lh3.googleusercontent.com/d/FILE_ID is the direct CDN URL — no redirect, no ORB.
@@ -42,6 +43,18 @@ function MemberCard({ member: m, onClick }) {
         <p className="font-serif font-semibold text-ink leading-tight">
           {m.prenom} {m.nom}
         </p>
+
+        {/* Metier */}
+        {m.metier && (
+          <p className="font-sans text-xs text-muted leading-tight">
+            {m.metier}
+          </p>
+        )}
+
+        {/* Availability */}
+        {m.disponibilite && (
+          <AvailabilityBadge disponibilite={m.disponibilite} />
+        )}
 
         {/* Localisation — ville + region */}
         {(m.ville || m.region) && (

@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-14T16:59:18.977Z"
+last_updated: "2026-03-14T19:19:21Z"
 progress:
-  total_phases: 5
+  total_phases: 6
   completed_phases: 5
-  total_plans: 12
-  completed_plans: 12
+  total_plans: 15
+  completed_plans: 13
 ---
 
 # Project State
@@ -18,16 +18,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-09)
 
 **Core value:** Association members can find and connect with each other by profession, location, and availability — and new members can apply to join.
-**Current focus:** Phase 5 — Registration Form
+**Current focus:** Phase 6 — Design Polish
 
 ## Current Position
 
-Phase: 5 of 6 — complete
-Plan: 2 of 2 complete
-Status: Phase 5 plan 02 complete — InscriptionPage fully functional: validation, submit flow, success screen, error toast
-Last activity: 2026-03-14 — Phase 5 plan 02 complete
+Phase: 6 of 6 — in progress
+Plan: 1 of 3 complete
+Status: Phase 6 executing — plan 01 complete; plans 02–03 remaining
+Last activity: 2026-03-14 — Phase 6 plan 01 complete (hero restructure, animation foundation, Header mobile fix)
 
-Progress: [█████████░] 83%
+Progress: [█████████░] 87%
 
 ## Performance Metrics
 
@@ -91,6 +91,10 @@ Recent decisions affecting current work:
 - [Phase 05-registration-form]: no-cors opaque response — setSubmitted(true) on any fetch resolve, never read response.ok or response.json()
 - [Phase 05-registration-form]: validate() plain nested function closing over fields/photoBase64 — called synchronously in handleSubmit, no useCallback needed
 - [Phase 05-registration-form]: Toast state is a plain string (null = no toast) — simplest model for a single concurrent notification
+- [Phase 06-design-polish]: React fragment (<>) not <div> as return root — div would prevent hero full-bleed width
+- [Phase 06-design-polish]: trigger=useState(1) so useMemberFetch fires on mount; handleSearch only sets hasSearched=true
+- [Phase 06-design-polish]: Stats use loading ? '…' : value — no hasSearched gate, visible on initial page load
+- [Phase 06-design-polish]: animation fill-mode 'both' — keeps cards invisible before stagger delay, prevents flash-then-fade
 
 ### Pending Todos
 
@@ -104,5 +108,5 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-03-14
-Stopped at: Phase 5 plan 02 complete — InscriptionPage submit flow, validation, success screen, error toast, commit 5058a9f
+Stopped at: Phase 6 plan 01 complete — hero restructure, animation foundation (fadeSlideUp), Header mobile fix, commits c2b061e 2e71634 efcd5f3
 Resume file: None

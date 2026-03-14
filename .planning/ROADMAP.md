@@ -110,7 +110,12 @@ Plans:
   2. On a mobile viewport, member cards stack vertically and filter controls are usable without horizontal overflow
   3. The AvailabilityBadge (colored dot + label) is visually identical in the card grid and the member detail modal
   4. The member detail modal has a smooth fade/scale entrance and exit animation when opened and closed
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [x] 06-01-PLAN.md — Hero section, fadeSlideUp animation, Header mobile fix (DES-01, DES-02)
+- [ ] 06-02-PLAN.md — MemberCard entrance animations with staggered delay
+- [ ] 06-03-PLAN.md — Collapsible filter panel + responsive audit
 
 ## Progress
 
@@ -124,4 +129,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 3. Directory Data and Cards | 2/3 | In Progress|  |
 | 4. Directory Filters and Modal | 3/3 | Complete   | 2026-03-14 |
 | 5. Registration Form | 1/2 | In Progress|  |
-| 6. Design Polish | 0/? | Not started | - |
+| 6. Design Polish | 1/3 | In Progress | - |

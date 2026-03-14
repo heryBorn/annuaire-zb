@@ -109,26 +109,31 @@ function DirectoryPage() {
   const [trigger] = useState(1);
   const { members, loading, error } = useMemberFetch({ trigger });
 
+  // Live filter inputs (controlled — change freely without affecting results)
   const [query,          setQuery]          = useState('');
   const [filterDomaine,  setFilterDomaine]  = useState('');
   const [filterVille,    setFilterVille]    = useState('');
   const [filterDispo,    setFilterDispo]    = useState('');
   const [filterService,  setFilterService]  = useState('');
-  const [filterOpen, setFilterOpen] = useState(false); // mobile filter panel toggle
+  const [filterOpen,     setFilterOpen]     = useState(false);
 
-  const [hasSearched, setHasSearched] = useState(false);
-  const [selectedMember, setSelectedMember] = useState(null); // stub for Plan 03
+  // Committed filter values — only update on "Rechercher" click
+  const [committed, setCommitted] = useState(null);
+  const [searching,  setSearching]  = useState(false);
+  const [selectedMember, setSelectedMember] = useState(null);
+
+  const hasSearched = committed !== null;
 
   const filteredResults = useMemo(() => {
-    if (!hasSearched || loading) return [];
+    if (!hasSearched || loading || searching) return [];
     return applyFilters(members, {
-      q:       query.trim().toLowerCase(),
-      domaine: filterDomaine,
-      ville:   filterVille,
-      dispo:   filterDispo,
-      service: filterService,
+      q:       committed.q,
+      domaine: committed.domaine,
+      ville:   committed.ville,
+      dispo:   committed.dispo,
+      service: committed.service,
     });
-  }, [members, query, filterDomaine, filterVille, filterDispo, filterService, hasSearched, loading]);
+  }, [members, committed, hasSearched, loading, searching]);
 
   const stats = useMemo(() => deriveStats(members), [members]);
 
@@ -138,8 +143,17 @@ function DirectoryPage() {
   );
 
   function handleSearch() {
-    setHasSearched(true);
-    // Members are pre-fetched on mount (trigger=1); filteredResults updates reactively via useMemo
+    setSearching(true);
+    setTimeout(() => {
+      setCommitted({
+        q:       query.trim().toLowerCase(),
+        domaine: filterDomaine,
+        ville:   filterVille,
+        dispo:   filterDispo,
+        service: filterService,
+      });
+      setSearching(false);
+    }, 800);
   }
 
   function resetSearch() {
@@ -148,9 +162,9 @@ function DirectoryPage() {
     setFilterVille('');
     setFilterDispo('');
     setFilterService('');
-    setHasSearched(false);
+    setCommitted(null);
+    setSearching(false);
     setSelectedMember(null);
-    // Do NOT reset trigger — members stay cached so reset is instant
   }
 
   const hasFilters =
@@ -262,7 +276,7 @@ function DirectoryPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {error
           ? <ErrorState message={error} />
-          : loading
+          : (loading || searching)
             ? Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)
             : !hasSearched
               ? <EmptyPrompt />

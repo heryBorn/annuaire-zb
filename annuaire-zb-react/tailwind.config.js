@@ -15,7 +15,7 @@ module.exports = {
       },
       fontFamily: {
         sans:  ['"DM Sans"', 'sans-serif'],
-        serif: ['"Playfair Display"', 'serif'],
+        serif: ['"Cormorant Garamond"', 'serif'],
       },
       keyframes: {
         fadeSlideUp: {

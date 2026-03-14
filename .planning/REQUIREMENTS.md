@@ -36,10 +36,10 @@
 
 - [x] **REG-01**: Registration form with all existing fields (personal info, professional info, photo)
 - [x] **REG-02**: Photo upload with canvas compression (max 400px, JPEG 80%) and live preview thumbnail
-- [ ] **REG-03**: Client-side form validation (required fields, bio minimum length, email format)
-- [ ] **REG-04**: Submit button shows loading state while POST is in flight
-- [ ] **REG-05**: Success screen replaces form after submission (same behavior as current app)
-- [ ] **REG-06**: Error toast/message shown if API call rejects (new — current app has no error feedback)
+- [x] **REG-03**: Client-side form validation (required fields, bio minimum length, email format)
+- [x] **REG-04**: Submit button shows loading state while POST is in flight
+- [x] **REG-05**: Success screen replaces form after submission (same behavior as current app)
+- [x] **REG-06**: Error toast/message shown if API call rejects (new — current app has no error feedback)
 
 ### Design
 
@@ -99,10 +99,10 @@
 | DIR-09 | Phase 4 | Complete |
 | REG-01 | Phase 5 | Complete |
 | REG-02 | Phase 5 | Complete |
-| REG-03 | Phase 5 | Pending |
-| REG-04 | Phase 5 | Pending |
-| REG-05 | Phase 5 | Pending |
-| REG-06 | Phase 5 | Pending |
+| REG-03 | Phase 5 | Complete |
+| REG-04 | Phase 5 | Complete |
+| REG-05 | Phase 5 | Complete |
+| REG-06 | Phase 5 | Complete |
 | DES-01 | Phase 6 | Pending |
 | DES-02 | Phase 6 | Pending |
 | DES-03 | Phase 6 | Pending |

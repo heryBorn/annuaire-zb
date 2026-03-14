@@ -22,12 +22,12 @@ See: .planning/PROJECT.md (updated 2026-03-09)
 
 ## Current Position
 
-Phase: 5 of 6 — in progress
-Plan: 1 of 2 complete
-Status: Phase 5 plan 01 complete — InscriptionPage form shell built and committed
-Last activity: 2026-03-14 — Phase 5 plan 01 complete
+Phase: 5 of 6 — complete
+Plan: 2 of 2 complete
+Status: Phase 5 plan 02 complete — InscriptionPage fully functional: validation, submit flow, success screen, error toast
+Last activity: 2026-03-14 — Phase 5 plan 02 complete
 
-Progress: [████████░░] 75%
+Progress: [█████████░] 83%
 
 ## Performance Metrics
 
@@ -88,6 +88,9 @@ Recent decisions affecting current work:
 - [Phase 05-registration-form]: handleField generic onChange using e.target.name — one handler covers all text/select/textarea fields
 - [Phase 05-registration-form]: ESLint forward stubs silenced with eslint-disable-next-line — photoBase64, loading, submitted, toast wired in Plan 02
 - [Phase 05-registration-form]: DISPONIBILITE_OPTIONS use full strings from inscription.html, not abbreviated DISPOS from DirectoryPage
+- [Phase 05-registration-form]: no-cors opaque response — setSubmitted(true) on any fetch resolve, never read response.ok or response.json()
+- [Phase 05-registration-form]: validate() plain nested function closing over fields/photoBase64 — called synchronously in handleSubmit, no useCallback needed
+- [Phase 05-registration-form]: Toast state is a plain string (null = no toast) — simplest model for a single concurrent notification
 
 ### Pending Todos
 
@@ -101,5 +104,5 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-03-14
-Stopped at: Phase 5 plan 01 complete — InscriptionPage form shell, all fields + photo upload, commit 841fb79
+Stopped at: Phase 5 plan 02 complete — InscriptionPage submit flow, validation, success screen, error toast, commit 5058a9f
 Resume file: None

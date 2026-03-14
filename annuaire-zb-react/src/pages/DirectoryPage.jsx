@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faXmark, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import MemberCard from '../components/MemberCard';
 import MemberModal from '../components/MemberModal';
 import SkeletonCard from '../components/SkeletonCard';
@@ -114,6 +114,7 @@ function DirectoryPage() {
   const [filterVille,    setFilterVille]    = useState('');
   const [filterDispo,    setFilterDispo]    = useState('');
   const [filterService,  setFilterService]  = useState('');
+  const [filterOpen, setFilterOpen] = useState(false); // mobile filter panel toggle
 
   const [hasSearched, setHasSearched] = useState(false);
   const [selectedMember, setSelectedMember] = useState(null); // stub for Plan 03
@@ -202,36 +203,58 @@ function DirectoryPage() {
           </button>
         </div>
 
-        <div className="flex flex-wrap gap-2 mt-3">
-          <select value={filterDomaine} onChange={e => setFilterDomaine(e.target.value)} className={SELECT_CLS}>
-            <option value="">🗂 Tous les domaines</option>
-            {DOMAINES.map(d => <option key={d} value={d}>{d}</option>)}
-          </select>
+        {/* Mobile filter toggle — hidden on md+ */}
+        <button
+          className="md:hidden flex items-center gap-2 font-sans text-sm text-ink border border-sand rounded-lg px-4 py-2 w-full justify-between mt-3"
+          onClick={() => setFilterOpen(o => !o)}
+          aria-expanded={filterOpen}
+          aria-controls="filter-panel"
+        >
+          <span>Filtrer</span>
+          <FontAwesomeIcon
+            icon={filterOpen ? faChevronUp : faChevronDown}
+            className="text-muted text-xs"
+          />
+        </button>
 
-          <select value={filterVille} onChange={e => setFilterVille(e.target.value)} className={SELECT_CLS}>
-            <option value="">📍 Toutes les villes</option>
-            {cities.map(c => <option key={c} value={c}>{c}</option>)}
-          </select>
+        {/* Filter panel — collapsible on mobile, always open on md+ */}
+        <div
+          id="filter-panel"
+          className={`overflow-hidden transition-all duration-200 ease-out md:overflow-visible md:max-h-none ${
+            filterOpen ? 'max-h-96' : 'max-h-0'
+          }`}
+        >
+          <div className="flex flex-wrap gap-2 mt-3">
+            <select value={filterDomaine} onChange={e => setFilterDomaine(e.target.value)} className={SELECT_CLS}>
+              <option value="">🗂 Tous les domaines</option>
+              {DOMAINES.map(d => <option key={d} value={d}>{d}</option>)}
+            </select>
 
-          <select value={filterDispo} onChange={e => setFilterDispo(e.target.value)} className={SELECT_CLS}>
-            <option value="">🟢 Toute disponibilité</option>
-            {DISPOS.map(d => <option key={d.value} value={d.value}>{d.label}</option>)}
-          </select>
+            <select value={filterVille} onChange={e => setFilterVille(e.target.value)} className={SELECT_CLS}>
+              <option value="">📍 Toutes les villes</option>
+              {cities.map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
 
-          <select value={filterService} onChange={e => setFilterService(e.target.value)} className={SELECT_CLS}>
-            <option value="">💼 Tout type de service</option>
-            {SERVICES.map(s => <option key={s} value={s}>{s}</option>)}
-          </select>
+            <select value={filterDispo} onChange={e => setFilterDispo(e.target.value)} className={SELECT_CLS}>
+              <option value="">🟢 Toute disponibilité</option>
+              {DISPOS.map(d => <option key={d.value} value={d.value}>{d.label}</option>)}
+            </select>
 
-          {hasFilters && (
-            <button
-              onClick={resetSearch}
-              className="flex items-center gap-1.5 border border-sand rounded-lg font-sans text-sm text-muted px-3 py-2 hover:text-terracotta transition-colors"
-            >
-              <FontAwesomeIcon icon={faXmark} />
-              Effacer filtres
-            </button>
-          )}
+            <select value={filterService} onChange={e => setFilterService(e.target.value)} className={SELECT_CLS}>
+              <option value="">💼 Tout type de service</option>
+              {SERVICES.map(s => <option key={s} value={s}>{s}</option>)}
+            </select>
+
+            {hasFilters && (
+              <button
+                onClick={resetSearch}
+                className="flex items-center gap-1.5 border border-sand rounded-lg font-sans text-sm text-muted px-3 py-2 hover:text-terracotta transition-colors"
+              >
+                <FontAwesomeIcon icon={faXmark} />
+                Effacer filtres
+              </button>
+            )}
+          </div>
         </div>
       </div>
 

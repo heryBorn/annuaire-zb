@@ -45,8 +45,8 @@
 
 - [x] **DES-01**: Modern hero section with gradient background and animated/prominent stats
 - [x] **DES-02**: Responsive layout — cards stack on mobile, filters collapse or scroll horizontally on small screens
-- [ ] **DES-03**: Reusable AvailabilityBadge component (colored dot + label) used consistently in cards and modal
-- [ ] **DES-04**: Member modal has smooth fade/scale entrance and exit animation
+- [x] **DES-03**: Reusable AvailabilityBadge component (colored dot + label) used consistently in cards and modal
+- [x] **DES-04**: Member modal has smooth fade/scale entrance and exit animation
 
 ## v2 Requirements
 
@@ -105,8 +105,8 @@
 | REG-06 | Phase 5 | Complete |
 | DES-01 | Phase 6 | Complete — 06-01 |
 | DES-02 | Phase 6 | Complete — 06-01 |
-| DES-03 | Phase 6 | Pending |
-| DES-04 | Phase 6 | Pending |
+| DES-03 | Phase 6 | Complete |
+| DES-04 | Phase 6 | Complete |
 
 **Coverage:**
 - v1 requirements: 28 total

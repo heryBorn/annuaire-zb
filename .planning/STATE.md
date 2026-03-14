@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-14T19:19:21Z"
+last_updated: "2026-03-14T19:25:12.391Z"
 progress:
   total_phases: 6
   completed_phases: 5
   total_plans: 15
-  completed_plans: 13
+  completed_plans: 14
 ---
 
 # Project State
@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-03-09)
 ## Current Position
 
 Phase: 6 of 6 — in progress
-Plan: 1 of 3 complete
-Status: Phase 6 executing — plan 01 complete; plans 02–03 remaining
-Last activity: 2026-03-14 — Phase 6 plan 01 complete (hero restructure, animation foundation, Header mobile fix)
+Plan: 2 of 3 complete
+Status: Phase 6 executing — plans 01–02 complete; plan 03 remaining
+Last activity: 2026-03-14 — Phase 6 plan 02 complete (AvailabilityBadge margin fix, MemberCard metier+badge, MemberModal 300ms, card stagger animation)
 
-Progress: [█████████░] 87%
+Progress: [█████████░] 93%
 
 ## Performance Metrics
 
@@ -50,6 +50,7 @@ Progress: [█████████░] 87%
 | Phase 01-scaffold P03 | 2 | 2 tasks | 5 files |
 | Phase 03-directory-data-and-cards P01 | 2 | 2 tasks | 2 files |
 | Phase 03-directory-data-and-cards P02 | 2 | 2 tasks | 2 files |
+| Phase 06-design-polish P02 | 2 | 4 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -95,6 +96,9 @@ Recent decisions affecting current work:
 - [Phase 06-design-polish]: trigger=useState(1) so useMemberFetch fires on mount; handleSearch only sets hasSearched=true
 - [Phase 06-design-polish]: Stats use loading ? '…' : value — no hasSearched gate, visible on initial page load
 - [Phase 06-design-polish]: animation fill-mode 'both' — keeps cards invisible before stagger delay, prevents flash-then-fade
+- [Phase 06-design-polish]: AvailabilityBadge owns no external margin — mt-2 removed; MemberCard uses gap-2, MemberModal uses mt-3 wrapper
+- [Phase 06-design-polish]: MemberModal animation duration locked to 300ms (duration-300) — centered in 250-350ms target range
+- [Phase 06-design-polish]: Stagger delay capped at 400ms: Math.min(index * 50, 400) — cards 8+ share max delay to avoid long waits
 
 ### Pending Todos
 
@@ -108,5 +112,5 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-03-14
-Stopped at: Phase 6 plan 01 complete — hero restructure, animation foundation (fadeSlideUp), Header mobile fix, commits c2b061e 2e71634 efcd5f3
+Stopped at: Phase 6 plan 02 complete — AvailabilityBadge margin, MemberCard metier+badge, MemberModal 300ms animation, card stagger wired, commits 76446e3 88aa2ee fd27746 2e2902e
 Resume file: None

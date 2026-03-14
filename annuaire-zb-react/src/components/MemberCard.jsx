@@ -2,15 +2,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot, faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons';
 import { faLinkedin } from '@fortawesome/free-brands-svg-icons';
 
-function MemberCard({ member: m }) {
+function MemberCard({ member: m, onClick }) {
   const initials = ((m.prenom || '?')[0] + (m.nom || '?')[0]).toUpperCase();
 
   return (
-    <div className="
-      rounded-xl overflow-hidden shadow-md bg-white cursor-pointer flex flex-col
-      transition-all duration-200 ease-out
-      hover:shadow-xl hover:scale-[1.02]
-    ">
+    <div
+      className="rounded-xl overflow-hidden shadow-md bg-white cursor-pointer flex flex-col transition-all duration-200 ease-out hover:shadow-xl hover:scale-[1.02]"
+      onClick={onClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') onClick?.(); }}
+    >
       {/* Photo — fixed height, smaller than full-square */}
       <div className="w-full h-40 overflow-hidden bg-sand flex items-center justify-center shrink-0">
         {m.photo_url

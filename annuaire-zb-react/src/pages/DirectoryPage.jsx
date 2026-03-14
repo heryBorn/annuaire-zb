@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
 import MemberCard from '../components/MemberCard';
+import MemberModal from '../components/MemberModal';
 import SkeletonCard from '../components/SkeletonCard';
 import { useMemberFetch } from '../hooks/useMemberFetch';
 
@@ -252,6 +253,12 @@ function DirectoryPage() {
                   ))
         }
       </div>
+      {selectedMember && (
+        <MemberModal
+          member={selectedMember}
+          onClose={() => setSelectedMember(null)}
+        />
+      )}
     </main>
   );
 }

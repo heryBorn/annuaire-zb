@@ -1,7 +1,7 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCamera, faXmark, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faCamera, faCheck, faXmark, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -111,16 +111,44 @@ function InscriptionPage() {
     consent: false,
   });
   const [errors, setErrors] = useState({});
-  // eslint-disable-next-line no-unused-vars
   const [photoBase64, setPhotoBase64] = useState('');
   const [photoPreviewUrl, setPhotoPreviewUrl] = useState('');
-  // eslint-disable-next-line no-unused-vars
   const [submitted, setSubmitted] = useState(false);
-  // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(false);
-  // eslint-disable-next-line no-unused-vars
   const [toast, setToast] = useState(null);
   const photoInputRef = useRef(null);
+
+  // ── Toast auto-dismiss ───────────────────────────────────────────────────────
+
+  useEffect(() => {
+    if (!toast) return;
+    const timer = setTimeout(() => setToast(null), 5000);
+    return () => clearTimeout(timer);
+  }, [toast]);
+
+  // ── Validation ───────────────────────────────────────────────────────────────
+
+  function validate() {
+    const errs = {};
+    if (!photoBase64) errs.photo = 'Une photo est requise.';
+    if (!fields.prenom.trim()) errs.prenom = 'Prénom requis.';
+    if (!fields.nom.trim()) errs.nom = 'Nom requis.';
+    if (!fields.email.trim()) {
+      errs.email = 'Email requis.';
+    } else if (!/\S+@\S+\.\S+/.test(fields.email)) {
+      errs.email = 'Format email invalide.';
+    }
+    if (!fields.metier.trim()) errs.metier = 'Métier requis.';
+    if (!fields.domaine) errs.domaine = 'Domaine requis.';
+    if (!fields.ville.trim()) errs.ville = 'Ville requise.';
+    if (!fields.bio.trim()) {
+      errs.bio = 'Bio requise.';
+    } else if (fields.bio.trim().length < 50) {
+      errs.bio = 'Minimum 50 caractères.';
+    }
+    if (!fields.consent) errs.consent = 'Consentement requis.';
+    return errs;
+  }
 
   // ── Handlers ────────────────────────────────────────────────────────────────
 
@@ -161,7 +189,53 @@ function InscriptionPage() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    // TODO: validation and submit — wired in Plan 02
+    setErrors({});
+
+    const errs = validate();
+    if (Object.keys(errs).length > 0) {
+      setErrors(errs);
+      const firstKey = Object.keys(errs)[0];
+      document.getElementById(firstKey)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    setLoading(true);
+    const payload = {
+      prenom: fields.prenom.trim(),
+      nom: fields.nom.trim(),
+      email: fields.email.trim(),
+      telephone: fields.telephone.trim(),
+      ville: fields.ville.trim(),
+      region: fields.region.trim(),
+      metier: fields.metier.trim(),
+      entreprise: fields.entreprise.trim(),
+      domaine: fields.domaine,
+      experience: fields.experience,
+      competences: fields.competences.join(', '),
+      bio: fields.bio.trim(),
+      site_web: fields.site_web.trim(),
+      linkedin: fields.linkedin.trim(),
+      disponibilite: fields.disponibilite,
+      type_service: fields.type_service,
+      statut: 'EN ATTENTE',
+      date_inscription: new Date().toLocaleDateString('fr-FR'),
+      photo_base64: photoBase64,
+      photo_mime: photoBase64 ? 'image/jpeg' : '',
+    };
+
+    try {
+      await fetch(process.env.REACT_APP_SHEET_API_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      setSubmitted(true);
+    } catch {
+      setToast('Une erreur est survenue. Veuillez réessayer ou contacter le webmaster.');
+    } finally {
+      setLoading(false);
+    }
   }
 
   // ── Render helpers ───────────────────────────────────────────────────────────
@@ -184,8 +258,39 @@ function InscriptionPage() {
 
   // ── JSX ──────────────────────────────────────────────────────────────────────
 
+  if (submitted) {
+    return (
+      <main className="min-h-screen bg-cream flex items-center justify-center px-6">
+        <div className="text-center max-w-md">
+          <div className="w-20 h-20 rounded-full bg-terracotta flex items-center justify-center mx-auto mb-6">
+            <FontAwesomeIcon icon={faCheck} className="text-cream text-3xl" />
+          </div>
+          <h2 className="font-serif text-2xl font-bold text-terracotta mb-3">Demande envoyée !</h2>
+          <p className="font-sans text-sm text-ink leading-relaxed mb-6">
+            Votre candidature a été reçue. Vous recevrez une confirmation par email.
+          </p>
+          <Link
+            to="/"
+            className="inline-block bg-soil text-cream font-sans text-sm font-semibold px-8 py-3 rounded-full hover:opacity-90 transition-opacity"
+          >
+            Retour à l'annuaire
+          </Link>
+        </div>
+      </main>
+    );
+  }
+
   return (
-    <main className="max-w-3xl mx-auto px-6 py-10">
+    <>
+      {toast && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-terracotta text-cream font-sans text-sm px-4 py-3 rounded-lg shadow-lg max-w-sm w-full">
+          <span className="flex-1">{toast}</span>
+          <button type="button" onClick={() => setToast(null)} className="shrink-0 hover:opacity-70">
+            <FontAwesomeIcon icon={faXmark} />
+          </button>
+        </div>
+      )}
+      <main className="max-w-3xl mx-auto px-6 py-10">
       {/* Page header */}
       <div className="mb-8">
         <h1 className="font-serif text-3xl font-bold text-soil mb-2">Rejoignez l'annuaire</h1>
@@ -206,6 +311,7 @@ function InscriptionPage() {
 
             {/* Photo zone */}
             <div
+              id="photo"
               role="button"
               tabIndex={0}
               onClick={() => photoInputRef.current?.click()}
@@ -607,6 +713,7 @@ function InscriptionPage() {
         </div>
       </form>
     </main>
+    </>
   );
 }
 

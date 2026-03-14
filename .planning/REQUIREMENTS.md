@@ -34,8 +34,8 @@
 
 ### Registration
 
-- [ ] **REG-01**: Registration form with all existing fields (personal info, professional info, photo)
-- [ ] **REG-02**: Photo upload with canvas compression (max 400px, JPEG 80%) and live preview thumbnail
+- [x] **REG-01**: Registration form with all existing fields (personal info, professional info, photo)
+- [x] **REG-02**: Photo upload with canvas compression (max 400px, JPEG 80%) and live preview thumbnail
 - [ ] **REG-03**: Client-side form validation (required fields, bio minimum length, email format)
 - [ ] **REG-04**: Submit button shows loading state while POST is in flight
 - [ ] **REG-05**: Success screen replaces form after submission (same behavior as current app)
@@ -97,8 +97,8 @@
 | DIR-07 | Phase 4 | Complete |
 | DIR-08 | Phase 4 | Complete |
 | DIR-09 | Phase 4 | Complete |
-| REG-01 | Phase 5 | Pending |
-| REG-02 | Phase 5 | Pending |
+| REG-01 | Phase 5 | Complete |
+| REG-02 | Phase 5 | Complete |
 | REG-03 | Phase 5 | Pending |
 | REG-04 | Phase 5 | Pending |
 | REG-05 | Phase 5 | Pending |

@@ -123,5 +123,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 2. Layout Shell | 1/1 | Complete    | 2026-03-13 |
 | 3. Directory Data and Cards | 2/3 | In Progress|  |
 | 4. Directory Filters and Modal | 3/3 | Complete   | 2026-03-14 |
-| 5. Registration Form | 0/2 | Not started | - |
+| 5. Registration Form | 1/2 | In Progress|  |
 | 6. Design Polish | 0/? | Not started | - |

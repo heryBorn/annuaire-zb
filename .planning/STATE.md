@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-14T09:52:45.925Z"
+last_updated: "2026-03-14T14:20:23Z"
 progress:
-  total_phases: 4
+  total_phases: 6
   completed_phases: 4
-  total_plans: 10
-  completed_plans: 10
+  total_plans: 12
+  completed_plans: 11
 ---
 
 # Project State
@@ -22,12 +22,12 @@ See: .planning/PROJECT.md (updated 2026-03-09)
 
 ## Current Position
 
-Phase: 4 of 6 — complete
-Plan: 3 of 3 complete
-Status: Phase 4 complete — all filters, stats, empty state, and member detail modal human-verified
-Last activity: 2026-03-14 — Phase 4 plan 03 complete
+Phase: 5 of 6 — in progress
+Plan: 1 of 2 complete
+Status: Phase 5 plan 01 complete — InscriptionPage form shell built and committed
+Last activity: 2026-03-14 — Phase 5 plan 01 complete
 
-Progress: [███████░░░] 63%
+Progress: [████████░░] 75%
 
 ## Performance Metrics
 
@@ -85,6 +85,9 @@ Recent decisions affecting current work:
 - [Phase 04-directory-filters-and-modal]: filteredResults via useMemo (not useState) — eliminates stale-result bugs; replaces phase string state machine
 - [Phase 04-directory-filters-and-modal]: selectedMember stub in DirectoryPage — Plan 02 creates modal, Plan 03 wires onClick
 - [Phase 04-directory-filters-and-modal]: onClick?.() optional chaining in onKeyDown — safe no-op when onClick prop not provided
+- [Phase 05-registration-form]: handleField generic onChange using e.target.name — one handler covers all text/select/textarea fields
+- [Phase 05-registration-form]: ESLint forward stubs silenced with eslint-disable-next-line — photoBase64, loading, submitted, toast wired in Plan 02
+- [Phase 05-registration-form]: DISPONIBILITE_OPTIONS use full strings from inscription.html, not abbreviated DISPOS from DirectoryPage
 
 ### Pending Todos
 
@@ -98,5 +101,5 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-03-14
-Stopped at: Phase 4 plan 03 complete — MemberCard onClick wired, MemberModal imported, commit eae181b
+Stopped at: Phase 5 plan 01 complete — InscriptionPage form shell, all fields + photo upload, commit 841fb79
 Resume file: None

@@ -245,12 +245,17 @@ function DirectoryPage() {
               ? <EmptyPrompt />
               : filteredResults.length === 0
                 ? <NoResults />
-                : filteredResults.map(m => (
-                    <MemberCard
+                : filteredResults.map((m, index) => (
+                    <div
                       key={m.email || m.nom}
-                      member={m}
-                      onClick={() => setSelectedMember(m)}
-                    />
+                      className="animate-fade-slide-up"
+                      style={{ animationDelay: `${Math.min(index * 50, 400)}ms` }}
+                    >
+                      <MemberCard
+                        member={m}
+                        onClick={() => setSelectedMember(m)}
+                      />
+                    </div>
                   ))
         }
       </div>

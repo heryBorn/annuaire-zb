@@ -1,9 +1,9 @@
-import { useMemo, useRef, useState } from 'react';
-import { flushSync } from 'react-dom';
+import { useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
 import MemberCard from '../components/MemberCard';
 import SkeletonCard from '../components/SkeletonCard';
+import { useMemberFetch } from '../hooks/useMemberFetch';
 
 const DOMAINES = [
   'Agriculture & Agroalimentaire',
@@ -105,19 +105,28 @@ function ErrorState({ message }) {
 // ─── page ────────────────────────────────────────────────────────────────────
 
 function DirectoryPage() {
-  // Filter form state (live — what the user sees in the inputs)
-  const [query,         setQuery]         = useState('');
-  const [filterDomaine, setFilterDomaine] = useState('');
-  const [filterVille,   setFilterVille]   = useState('');
-  const [filterDispo,   setFilterDispo]   = useState('');
-  const [filterService, setFilterService] = useState('');
+  const [trigger, setTrigger] = useState(0);
+  const { members, loading, error } = useMemberFetch({ trigger });
 
-  // Search result state (explicit — only changes when a fetch completes)
-  const [phase,   setPhase]   = useState('idle'); // 'idle' | 'loading' | 'done' | 'error'
-  const [members, setMembers] = useState([]);
-  const [results, setResults] = useState([]);
-  const [errorMsg, setErrorMsg] = useState('');
-  const fetchId = useRef(0);
+  const [query,          setQuery]          = useState('');
+  const [filterDomaine,  setFilterDomaine]  = useState('');
+  const [filterVille,    setFilterVille]    = useState('');
+  const [filterDispo,    setFilterDispo]    = useState('');
+  const [filterService,  setFilterService]  = useState('');
+
+  const [hasSearched, setHasSearched] = useState(false);
+  const [selectedMember, setSelectedMember] = useState(null); // stub for Plan 03
+
+  const filteredResults = useMemo(() => {
+    if (!hasSearched || loading) return [];
+    return applyFilters(members, {
+      q:       query.trim().toLowerCase(),
+      domaine: filterDomaine,
+      ville:   filterVille,
+      dispo:   filterDispo,
+      service: filterService,
+    });
+  }, [members, query, filterDomaine, filterVille, filterDispo, filterService, hasSearched, loading]);
 
   const stats = useMemo(() => deriveStats(members), [members]);
 
@@ -126,52 +135,23 @@ function DirectoryPage() {
     [members]
   );
 
-  async function runSearch() {
-    const id = ++fetchId.current;
-
-    // Force immediate DOM flush — clears results and shows skeletons before fetch starts
-    flushSync(() => {
-      setPhase('loading');
-      setResults([]);
-      setMembers([]);
-    });
-
-    // Snapshot filter values at click time — avoids stale-closure issues
-    const snap = {
-      q:       query.trim().toLowerCase(),
-      domaine: filterDomaine,
-      ville:   filterVille,
-      dispo:   filterDispo,
-      service: filterService,
-    };
-
-    try {
-      const url = process.env.REACT_APP_SHEET_API_URL + '?action=getMembers';
-      const res = await fetch(url);
-      const data = await res.json();
-      if (id !== fetchId.current) return; // stale — a newer search was started
-      const all = data.members || [];
-      setMembers(all);
-      setResults(applyFilters(all, snap));
-      setPhase('done');
-    } catch (err) {
-      if (id !== fetchId.current) return;
-      setErrorMsg(err.message);
-      setPhase('error');
+  function handleSearch() {
+    if (!hasSearched) {
+      setHasSearched(true);
+      setTrigger(t => t + 1); // triggers fetch once via useMemberFetch
     }
+    // After first load, filteredResults updates reactively via useMemo — no further action needed
   }
 
   function resetSearch() {
-    fetchId.current++;          // cancel any in-flight fetch
     setQuery('');
     setFilterDomaine('');
     setFilterVille('');
     setFilterDispo('');
     setFilterService('');
-    setPhase('idle');
-    setMembers([]);
-    setResults([]);
-    setErrorMsg('');
+    setHasSearched(false);
+    setSelectedMember(null);
+    // Do NOT reset trigger — members stay cached so reset is instant
   }
 
   const hasFilters =
@@ -189,9 +169,9 @@ function DirectoryPage() {
           Découvrez les compétences et savoir-faire de vos voisins. Recherchez un membre par domaine, localité ou disponibilité.
         </p>
         <div className="flex justify-center gap-8 mt-6">
-          <StatInline value={phase === 'idle' ? '—' : stats.total}   label="Membres" />
-          <StatInline value={phase === 'idle' ? '—' : stats.domains} label="Domaines" />
-          <StatInline value={phase === 'idle' ? '—' : stats.villes}  label="Villes" />
+          <StatInline value={!hasSearched ? '—' : stats.total}   label="Membres" />
+          <StatInline value={!hasSearched ? '—' : stats.domains} label="Domaines" />
+          <StatInline value={!hasSearched ? '—' : stats.villes}  label="Villes" />
         </div>
       </div>
 
@@ -207,13 +187,13 @@ function DirectoryPage() {
               type="text"
               value={query}
               onChange={e => setQuery(e.target.value)}
-              onKeyDown={e => { if (e.key === 'Enter') runSearch(); }}
+              onKeyDown={e => { if (e.key === 'Enter') handleSearch(); }}
               placeholder="Rechercher un nom, métier, compétence..."
               className="w-full pl-9 pr-3 py-2 border border-sand rounded-lg font-sans text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-terracotta/40"
             />
           </div>
           <button
-            onClick={runSearch}
+            onClick={handleSearch}
             className="bg-terracotta text-cream font-sans text-sm font-semibold px-5 py-2 rounded-lg shrink-0 hover:opacity-90 transition-opacity"
           >
             Rechercher
@@ -255,15 +235,21 @@ function DirectoryPage() {
 
       {/* Results */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {phase === 'error'
-          ? <ErrorState message={errorMsg} />
-          : phase === 'loading'
+        {error
+          ? <ErrorState message={error} />
+          : loading
             ? Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)
-            : phase === 'idle'
+            : !hasSearched
               ? <EmptyPrompt />
-              : results.length === 0
+              : filteredResults.length === 0
                 ? <NoResults />
-                : results.map(m => <MemberCard key={m.email || m.nom} member={m} />)
+                : filteredResults.map(m => (
+                    <MemberCard
+                      key={m.email || m.nom}
+                      member={m}
+                      onClick={() => setSelectedMember(m)}
+                    />
+                  ))
         }
       </div>
     </main>

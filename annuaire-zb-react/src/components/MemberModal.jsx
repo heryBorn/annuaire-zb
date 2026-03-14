@@ -45,11 +45,12 @@ function MemberModal({ member: m, onClose }) {
   // Initials fallback
   const initials = ((m.prenom || '?')[0] + (m.nom || '?')[0]).toUpperCase();
 
-  // Google Drive /uc?id= links hit per-file quota → 429. Rewrite to CDN-cached thumbnail.
+  // Drive's /uc and /thumbnail URLs redirect → ORB blocks them in-app.
+  // lh3.googleusercontent.com/d/FILE_ID is the direct CDN URL — no redirect, no ORB.
   function driveThumb(url) {
     if (!url) return null;
     const match = url.match(/(?:\/d\/|[?&]id=)([\w-]+)/);
-    return match ? `https://drive.google.com/thumbnail?id=${match[1]}&sz=w400` : url;
+    return match ? `https://lh3.googleusercontent.com/d/${match[1]}` : url;
   }
 
   return ReactDOM.createPortal(

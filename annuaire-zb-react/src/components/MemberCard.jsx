@@ -2,12 +2,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot, faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons';
 import { faLinkedin } from '@fortawesome/free-brands-svg-icons';
 
-// Google Drive /uc?id= links hit a per-file quota → 429. Rewrite to /thumbnail
-// which is CDN-cached and rate-limit-free.
+// Drive's /uc and /thumbnail URLs redirect → ORB blocks them in-app.
+// lh3.googleusercontent.com/d/FILE_ID is the direct CDN URL — no redirect, no ORB.
 function driveThumb(url) {
   if (!url) return null;
   const match = url.match(/(?:\/d\/|[?&]id=)([\w-]+)/);
-  return match ? `https://drive.google.com/thumbnail?id=${match[1]}&sz=w400` : url;
+  return match ? `https://lh3.googleusercontent.com/d/${match[1]}` : url;
 }
 
 function MemberCard({ member: m, onClick }) {

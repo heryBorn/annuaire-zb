@@ -118,6 +118,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 1. Scaffold | 3/3 | Complete |  |
 | 2. Layout Shell | 1/1 | Complete    | 2026-03-13 |
 | 3. Directory Data and Cards | 2/3 | In Progress|  |
-| 4. Directory Filters and Modal | 0/3 | Not started | - |
+| 4. Directory Filters and Modal | 2/3 | In Progress|  |
 | 5. Registration Form | 0/? | Not started | - |
 | 6. Design Polish | 0/? | Not started | - |

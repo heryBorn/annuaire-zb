@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in_progress
-last_updated: "2026-03-13T18:00:00.000Z"
+last_updated: "2026-03-14T15:49:00Z"
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 8
-  completed_plans: 6
+  completed_plans: 8
 ---
 
 # Project State
@@ -18,16 +18,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-09)
 
 **Core value:** Association members can find and connect with each other by profession, location, and availability — and new members can apply to join.
-**Current focus:** Phase 4 — Filters (next)
+**Current focus:** Phase 4 — Filters (in progress)
 
 ## Current Position
 
-Phase: 3 of 6 — complete
-Plan: 3 of 3 complete
-Status: Phase 3 complete — DirectoryPage with search panel, card redesign, search-first UX
-Last activity: 2026-03-13 — Phase 3 plan 03 complete
+Phase: 4 of 6 — in progress
+Plan: 2 of 3 complete
+Status: Phase 4 plan 02 complete — MemberModal component with portal, enter animation, all close triggers
+Last activity: 2026-03-14 — Phase 4 plan 02 complete
 
-Progress: [█████░░░░░] 50%
+Progress: [█████░░░░░] 54%
 
 ## Performance Metrics
 
@@ -78,10 +78,16 @@ Recent decisions affecting current work:
 - [Phase 03-directory-data-and-cards]: Search-first UX — cards hidden until Rechercher clicked, mirrors index.html behavior
 - [Phase 03-directory-data-and-cards]: MemberCard uses h-40 photo (not aspect-square), domaine badge, ville+region, bio line-clamp-2, footer links
 - [Phase 03-directory-data-and-cards]: disponibilite removed from card display but kept as search filter (field still on member data)
+- [Phase 04-directory-filters-and-modal]: AvailabilityBadge prop is 'disponibilite' (not 'status') — plan specified wrong prop name, fixed inline
+- [Phase 04-directory-filters-and-modal]: MemberModal uses ReactDOM.createPortal — portal pattern for modals to escape stacking contexts
+- [Phase 04-directory-filters-and-modal]: requestAnimationFrame enter animation — paint opacity-0/scale-95 first, then transition fires
+- [Phase 04-directory-filters-and-modal]: trigger state never reset on resetSearch — members cached so reset is instant, no second network call
+- [Phase 04-directory-filters-and-modal]: filteredResults via useMemo (not useState) — eliminates stale-result bugs; replaces phase string state machine
+- [Phase 04-directory-filters-and-modal]: selectedMember stub in DirectoryPage — Plan 02 creates modal, Plan 03 wires onClick
 
 ### Pending Todos
 
-None yet.
+- **RESOLVED**: Clicking "Rechercher" multiple times bug — fixed in Phase 4 plan 01 by replacing runSearch/flushSync with useMemberFetch + useMemo pattern
 
 ### Blockers/Concerns
 
@@ -90,6 +96,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-13
-Stopped at: Phase 3 complete — all 3 plans done, commit 41a3675
+Last session: 2026-03-14
+Stopped at: Phase 4 plan 01 complete — DirectoryPage refactored, commit f413d15
 Resume file: None

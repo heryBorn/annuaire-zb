@@ -25,12 +25,12 @@
 - [x] **DIR-01**: Member list fetched from Google Apps Script on page load (`?action=getMembers`)
 - [x] **DIR-02**: Skeleton card grid displayed while data is loading
 - [x] **DIR-03**: Member cards rendered in a responsive grid (photo, name, title, company, availability badge)
-- [ ] **DIR-04**: Stats counters displayed (total members, number of domains, available count)
-- [ ] **DIR-05**: Text search filtering members by name, job title, company, skills, bio
-- [ ] **DIR-06**: Four dropdown filters: city, domain, availability, service type
-- [ ] **DIR-07**: Empty state message shown when search/filter returns no results
-- [ ] **DIR-08**: Member detail modal opens on card click with full profile (photo, contact links, bio, skills, availability)
-- [ ] **DIR-09**: Modal closeable via close button, clicking overlay, or Escape key
+- [x] **DIR-04**: Stats counters displayed (total members, number of domains, available count)
+- [x] **DIR-05**: Text search filtering members by name, job title, company, skills, bio
+- [x] **DIR-06**: Four dropdown filters: city, domain, availability, service type
+- [x] **DIR-07**: Empty state message shown when search/filter returns no results
+- [x] **DIR-08**: Member detail modal opens on card click with full profile (photo, contact links, bio, skills, availability)
+- [x] **DIR-09**: Modal closeable via close button, clicking overlay, or Escape key
 
 ### Registration
 
@@ -91,12 +91,12 @@
 | DIR-01 | Phase 3 | Complete |
 | DIR-02 | Phase 3 | Complete |
 | DIR-03 | Phase 3 | Complete |
-| DIR-04 | Phase 3 | Pending |
-| DIR-05 | Phase 4 | Pending |
-| DIR-06 | Phase 4 | Pending |
-| DIR-07 | Phase 4 | Pending |
-| DIR-08 | Phase 4 | Pending |
-| DIR-09 | Phase 4 | Pending |
+| DIR-04 | Phase 3 | Complete |
+| DIR-05 | Phase 4 | Complete |
+| DIR-06 | Phase 4 | Complete |
+| DIR-07 | Phase 4 | Complete |
+| DIR-08 | Phase 4 | Complete |
+| DIR-09 | Phase 4 | Complete |
 | REG-01 | Phase 5 | Pending |
 | REG-02 | Phase 5 | Pending |
 | REG-03 | Phase 5 | Pending |

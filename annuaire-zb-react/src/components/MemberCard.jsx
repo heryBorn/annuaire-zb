@@ -2,6 +2,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot, faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons';
 import { faLinkedin } from '@fortawesome/free-brands-svg-icons';
 
+// Google Drive /uc?id= links hit a per-file quota → 429. Rewrite to /thumbnail
+// which is CDN-cached and rate-limit-free.
+function driveThumb(url) {
+  if (!url) return null;
+  const match = url.match(/(?:\/d\/|[?&]id=)([\w-]+)/);
+  return match ? `https://drive.google.com/thumbnail?id=${match[1]}&sz=w400` : url;
+}
+
 function MemberCard({ member: m, onClick }) {
   const initials = ((m.prenom || '?')[0] + (m.nom || '?')[0]).toUpperCase();
 
@@ -16,7 +24,7 @@ function MemberCard({ member: m, onClick }) {
       {/* Photo — fixed height, smaller than full-square */}
       <div className="w-full h-40 overflow-hidden bg-sand flex items-center justify-center shrink-0">
         {m.photo_url
-          ? <img src={m.photo_url} alt={`${m.prenom} ${m.nom}`} className="w-full h-full object-cover" />
+          ? <img src={driveThumb(m.photo_url)} alt={`${m.prenom} ${m.nom}`} className="w-full h-full object-cover" />
           : <span className="font-serif text-3xl text-muted">{initials}</span>
         }
       </div>

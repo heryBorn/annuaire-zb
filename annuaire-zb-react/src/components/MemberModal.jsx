@@ -45,6 +45,13 @@ function MemberModal({ member: m, onClose }) {
   // Initials fallback
   const initials = ((m.prenom || '?')[0] + (m.nom || '?')[0]).toUpperCase();
 
+  // Google Drive /uc?id= links hit per-file quota → 429. Rewrite to CDN-cached thumbnail.
+  function driveThumb(url) {
+    if (!url) return null;
+    const match = url.match(/(?:\/d\/|[?&]id=)([\w-]+)/);
+    return match ? `https://drive.google.com/thumbnail?id=${match[1]}&sz=w400` : url;
+  }
+
   return ReactDOM.createPortal(
     // Overlay — closes modal on click
     <div
@@ -70,7 +77,7 @@ function MemberModal({ member: m, onClose }) {
           {/* Photo avatar — 96px circle */}
           <div className="w-24 h-24 rounded-full overflow-hidden bg-sand flex items-center justify-center mb-4 ring-4 ring-sand">
             {m.photo_url
-              ? <img src={m.photo_url} alt={`${m.prenom} ${m.nom}`} className="w-full h-full object-cover" />
+              ? <img src={driveThumb(m.photo_url)} alt={`${m.prenom} ${m.nom}`} className="w-full h-full object-cover" />
               : <span className="font-serif text-3xl text-muted">{initials}</span>
             }
           </div>

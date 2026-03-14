@@ -78,7 +78,12 @@ Plans:
   3. When no cards match the active search and filters, an empty state message replaces the grid
   4. Clicking a member card opens a modal with the full profile — photo, bio, skills, contact links, availability
   5. The modal closes when the user clicks the overlay, presses Escape, or clicks the close button
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — Refactor DirectoryPage: useMemberFetch + useMemo derived filtering, fix search-clear bug
+- [ ] 04-02-PLAN.md — Create MemberModal component with portrait layout, animation, and three close triggers
+- [ ] 04-03-PLAN.md — Wire MemberCard onClick + import MemberModal into DirectoryPage, human verify
 
 ### Phase 5: Registration Form
 **Goal**: The registration page is fully functional — all form fields, photo upload with live preview, client-side validation, submit feedback, and success/error screens
@@ -113,6 +118,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 1. Scaffold | 3/3 | Complete |  |
 | 2. Layout Shell | 1/1 | Complete    | 2026-03-13 |
 | 3. Directory Data and Cards | 2/3 | In Progress|  |
-| 4. Directory Filters and Modal | 0/? | Not started | - |
+| 4. Directory Filters and Modal | 0/3 | Not started | - |
 | 5. Registration Form | 0/? | Not started | - |
 | 6. Design Polish | 0/? | Not started | - |

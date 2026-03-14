@@ -8,7 +8,7 @@ function Header() {
           <img src="/images/logo_zb_trans.png" alt="ZB" className="h-9 sm:h-10" />
           <div className="flex flex-col leading-tight">
             <span className="font-serif font-bold text-cream text-base leading-none">Annuaire</span>
-            <span className="font-sans text-cream/70 text-xl mt-0.5">Association Zanak'i Bongolava</span>
+            <span className="font-sans text-cream/70 text-xl mt-0.5 hidden md:block">Association Zanak'i Bongolava</span>
           </div>
         </Link>
         <Link

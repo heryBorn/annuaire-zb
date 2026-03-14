@@ -78,7 +78,7 @@ function MemberModal({ member: m, onClose }) {
           {/* Photo avatar — 96px circle */}
           <div className="w-24 h-24 rounded-full overflow-hidden bg-sand flex items-center justify-center mb-4 ring-4 ring-sand">
             {m.photo_url
-              ? <img src={driveThumb(m.photo_url)} alt={`${m.prenom} ${m.nom}`} className="w-full h-full object-cover" />
+              ? <img src={driveThumb(m.photo_url)} alt={`${m.prenom} ${m.nom}`} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
               : <span className="font-serif text-3xl text-muted">{initials}</span>
             }
           </div>

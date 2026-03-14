@@ -24,7 +24,7 @@ function MemberCard({ member: m, onClick }) {
       {/* Photo — fixed height, smaller than full-square */}
       <div className="w-full h-40 overflow-hidden bg-sand flex items-center justify-center shrink-0">
         {m.photo_url
-          ? <img src={driveThumb(m.photo_url)} alt={`${m.prenom} ${m.nom}`} className="w-full h-full object-cover" />
+          ? <img src={driveThumb(m.photo_url)} alt={`${m.prenom} ${m.nom}`} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
           : <span className="font-serif text-3xl text-muted">{initials}</span>
         }
       </div>

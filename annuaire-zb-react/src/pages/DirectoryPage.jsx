@@ -62,11 +62,11 @@ function deriveStats(members) {
   };
 }
 
-function StatInline({ value, label }) {
+function StatChip({ value, label }) {
   return (
     <div className="text-center">
-      <p className="font-serif text-3xl font-bold text-soil">{value}</p>
-      <p className="font-sans text-xs text-muted mt-0.5 uppercase tracking-wide">{label}</p>
+      <p className="font-serif text-3xl sm:text-4xl font-bold text-cream">{value}</p>
+      <p className="font-sans text-xs text-cream/60 mt-0.5 uppercase tracking-wide">{label}</p>
     </div>
   );
 }
@@ -106,7 +106,7 @@ function ErrorState({ message }) {
 // ─── page ────────────────────────────────────────────────────────────────────
 
 function DirectoryPage() {
-  const [trigger, setTrigger] = useState(0);
+  const [trigger] = useState(1);
   const { members, loading, error } = useMemberFetch({ trigger });
 
   const [query,          setQuery]          = useState('');
@@ -137,11 +137,8 @@ function DirectoryPage() {
   );
 
   function handleSearch() {
-    if (!hasSearched) {
-      setHasSearched(true);
-      setTrigger(t => t + 1); // triggers fetch once via useMemberFetch
-    }
-    // After first load, filteredResults updates reactively via useMemo — no further action needed
+    setHasSearched(true);
+    // Members are pre-fetched on mount (trigger=1); filteredResults updates reactively via useMemo
   }
 
   function resetSearch() {
@@ -160,23 +157,27 @@ function DirectoryPage() {
     filterDispo !== '' || filterService !== '';
 
   return (
-    <main className="px-6 py-8 max-w-7xl mx-auto">
-      {/* Hero */}
-      <div className="mb-8 text-center">
-        <h1 className="font-serif text-3xl sm:text-4xl font-bold text-ink leading-tight">
-          Trouvez les <em>talents</em><br />de notre région
-        </h1>
-        <p className="font-sans text-sm text-muted mt-3 max-w-lg mx-auto">
-          Découvrez les compétences et savoir-faire de vos voisins. Recherchez un membre par domaine, localité ou disponibilité.
-        </p>
-        <div className="flex justify-center gap-8 mt-6">
-          <StatInline value={!hasSearched ? '—' : stats.total}   label="Membres" />
-          <StatInline value={!hasSearched ? '—' : stats.domains} label="Domaines" />
-          <StatInline value={!hasSearched ? '—' : stats.villes}  label="Villes" />
+    <>
+      {/* Hero — full-bleed bg-soil band, outside max-w container */}
+      <section className="bg-soil text-cream pt-24 pb-10 px-6">
+        <div className="max-w-7xl mx-auto text-center">
+          <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-cream leading-tight">
+            Annuaire Zanak'i Bongolava
+          </h1>
+          <p className="font-sans text-sm text-cream/70 mt-3 max-w-lg mx-auto">
+            Découvrez les compétences et savoir-faire de vos voisins.
+          </p>
+          <div className="flex justify-center gap-8 sm:gap-12 mt-6">
+            <StatChip value={loading ? '…' : stats.total}   label="Membres" />
+            <StatChip value={loading ? '…' : stats.domains} label="Domaines" />
+            <StatChip value={loading ? '…' : stats.villes}  label="Villes" />
+          </div>
         </div>
-      </div>
+      </section>
 
-      {/* Search panel */}
+      {/* Page content */}
+      <main className="px-6 py-8 max-w-7xl mx-auto">
+        {/* Search panel */}
       <div className="bg-white rounded-xl shadow-md p-5 mb-8">
         <div className="flex gap-2">
           <div className="relative flex-1">
@@ -259,7 +260,8 @@ function DirectoryPage() {
           onClose={() => setSelectedMember(null)}
         />
       )}
-    </main>
+      </main>
+    </>
   );
 }
 

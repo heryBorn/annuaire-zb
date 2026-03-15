@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faXmark, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import MemberCard from '../components/MemberCard';
@@ -109,10 +109,6 @@ function DirectoryPage() {
   const [trigger] = useState(1);
   const { members, loading, error } = useMemberFetch({ trigger });
 
-  // Always-current members ref so setTimeout closures never see stale data
-  const membersRef = useRef(members);
-  membersRef.current = members;
-
   // Live filter inputs
   const [query,         setQuery]         = useState('');
   const [filterDomaine, setFilterDomaine] = useState('');
@@ -135,18 +131,14 @@ function DirectoryPage() {
   );
 
   function handleSearch() {
-    // Capture filter values now (before the timeout closure)
-    const q       = query.trim().toLowerCase();
-    const domaine = filterDomaine;
-    const ville   = filterVille;
-    const dispo   = filterDispo;
-    const service = filterService;
-
-    setSearch({ status: 'searching', results: [] }); // one call — old results gone instantly
-    setTimeout(() => {
-      const results = applyFilters(membersRef.current, { q, domaine, ville, dispo, service });
-      setSearch({ status: 'done', results });         // one call — atomic transition
-    }, 800);
+    const results = applyFilters(members, {
+      q:       query.trim().toLowerCase(),
+      domaine: filterDomaine,
+      ville:   filterVille,
+      dispo:   filterDispo,
+      service: filterService,
+    });
+    setSearch({ status: 'done', results });
   }
 
   function resetSearch() {

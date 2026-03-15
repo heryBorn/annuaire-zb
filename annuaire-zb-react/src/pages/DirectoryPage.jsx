@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faXmark, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import MemberCard from '../components/MemberCard';
@@ -118,7 +118,9 @@ function DirectoryPage() {
   const [filterOpen,    setFilterOpen]    = useState(false);
 
   // status: 'idle' | 'done'
-  const [search, setSearch] = useState({ status: 'idle', results: [] });
+  const [search, setSearch]     = useState({ status: 'idle', results: [] });
+  const [searching, setSearching] = useState(false); // controls loader only
+  const timerRef = useRef(null);
 
   const [selectedMember, setSelectedMember] = useState(null);
 
@@ -130,19 +132,26 @@ function DirectoryPage() {
   );
 
   function handleSearch() {
-    setSearch({
-      status: 'done',
-      results: applyFilters(members, {
-        q:       query.trim().toLowerCase(),
-        domaine: filterDomaine,
-        ville:   filterVille,
-        dispo:   filterDispo,
-        service: filterService,
-      }),
+    // Compute results synchronously first — same logic as the working version
+    const results = applyFilters(members, {
+      q:       query.trim().toLowerCase(),
+      domaine: filterDomaine,
+      ville:   filterVille,
+      dispo:   filterDispo,
+      service: filterService,
     });
+    // Show loader, then reveal pre-computed results after delay
+    setSearching(true);
+    clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      setSearch({ status: 'done', results });
+      setSearching(false);
+    }, 800);
   }
 
   function resetSearch() {
+    clearTimeout(timerRef.current);
+    setSearching(false);
     setQuery('');
     setFilterDomaine('');
     setFilterVille('');
@@ -261,7 +270,7 @@ function DirectoryPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {error
           ? <ErrorState message={error} />
-          : loading
+          : (loading || searching)
             ? Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)
             : search.status === 'idle'
               ? <EmptyPrompt />

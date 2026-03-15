@@ -117,23 +117,11 @@ function DirectoryPage() {
   const [filterService,  setFilterService]  = useState('');
   const [filterOpen,     setFilterOpen]     = useState(false);
 
-  // Committed filter values — only update on "Rechercher" click
-  const [committed, setCommitted] = useState(null);
-  const [searching,  setSearching]  = useState(false);
+  // Display state — only set inside handleSearch, never reactive
+  const [displayResults, setDisplayResults] = useState([]);
+  const [hasSearched,    setHasSearched]    = useState(false);
+  const [searching,      setSearching]      = useState(false);
   const [selectedMember, setSelectedMember] = useState(null);
-
-  const hasSearched = committed !== null;
-
-  const filteredResults = useMemo(() => {
-    if (!hasSearched || loading || searching) return [];
-    return applyFilters(members, {
-      q:       committed.q,
-      domaine: committed.domaine,
-      ville:   committed.ville,
-      dispo:   committed.dispo,
-      service: committed.service,
-    });
-  }, [members, committed, hasSearched, loading, searching]);
 
   const stats = useMemo(() => deriveStats(members), [members]);
 
@@ -145,13 +133,16 @@ function DirectoryPage() {
   function handleSearch() {
     setSearching(true);
     setTimeout(() => {
-      setCommitted({
+      // Capture live inputs, apply all filters together, commit in one setState call
+      const results = applyFilters(members, {
         q:       query.trim().toLowerCase(),
         domaine: filterDomaine,
         ville:   filterVille,
         dispo:   filterDispo,
         service: filterService,
       });
+      setDisplayResults(results);
+      setHasSearched(true);
       setSearching(false);
     }, 800);
   }
@@ -162,7 +153,8 @@ function DirectoryPage() {
     setFilterVille('');
     setFilterDispo('');
     setFilterService('');
-    setCommitted(null);
+    setDisplayResults([]);
+    setHasSearched(false);
     setSearching(false);
     setSelectedMember(null);
   }
@@ -280,9 +272,9 @@ function DirectoryPage() {
             ? Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)
             : !hasSearched
               ? <EmptyPrompt />
-              : filteredResults.length === 0
+              : displayResults.length === 0
                 ? <NoResults />
-                : filteredResults.map((m, index) => (
+                : displayResults.map((m, index) => (
                     <div
                       key={m.email || m.nom}
                       className="animate-fade-slide-up"

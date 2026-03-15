@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faXmark, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import MemberCard from '../components/MemberCard';
@@ -117,11 +117,9 @@ function DirectoryPage() {
   const [filterService, setFilterService] = useState('');
   const [filterOpen,    setFilterOpen]    = useState(false);
 
-  // Single atomic search state — one setState per transition, no intermediate renders
   // status: 'idle' | 'searching' | 'done'
   const [search, setSearch] = useState({ status: 'idle', results: [] });
-  // pendingFilters triggers the useEffect after 'searching' is painted
-  const [pendingFilters, setPendingFilters] = useState(null);
+  const timerRef = useRef(null);
 
   const [selectedMember, setSelectedMember] = useState(null);
 
@@ -132,38 +130,34 @@ function DirectoryPage() {
     [members]
   );
 
-  // Click handler: clear results + record which filters to apply
   function handleSearch() {
-    setSearch({ status: 'searching', results: [] });
-    setPendingFilters({
+    // 1. Compute results NOW with current members (no closure/async issue)
+    const results = applyFilters(members, {
       q:       query.trim().toLowerCase(),
       domaine: filterDomaine,
       ville:   filterVille,
       dispo:   filterDispo,
       service: filterService,
-      _ts:     Date.now(), // force effect to re-run even with identical filters
     });
+
+    // 2. Immediately replace old results with skeleton loader
+    setSearch({ status: 'searching', results: [] });
+
+    // 3. After fake delay, show the already-computed results
+    clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      setSearch({ status: 'done', results });
+    }, 800);
   }
 
-  // Effect runs after the 'searching' render is committed to the DOM —
-  // old results are guaranteed gone before the timer fires
-  useEffect(() => {
-    if (!pendingFilters) return;
-    const { _ts, ...filters } = pendingFilters;
-    const t = setTimeout(() => {
-      setSearch({ status: 'done', results: applyFilters(members, filters) });
-    }, 800);
-    return () => clearTimeout(t); // cancel if user clicks again before 800ms
-  }, [pendingFilters]); // eslint-disable-line react-hooks/exhaustive-deps
-
   function resetSearch() {
+    clearTimeout(timerRef.current);
     setQuery('');
     setFilterDomaine('');
     setFilterVille('');
     setFilterDispo('');
     setFilterService('');
     setSearch({ status: 'idle', results: [] });
-    setPendingFilters(null);
     setSelectedMember(null);
   }
 

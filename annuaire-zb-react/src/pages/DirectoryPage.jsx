@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faXmark, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import MemberCard from '../components/MemberCard';
@@ -117,9 +117,8 @@ function DirectoryPage() {
   const [filterService, setFilterService] = useState('');
   const [filterOpen,    setFilterOpen]    = useState(false);
 
-  // status: 'idle' | 'loading' | 'done'
+  // status: 'idle' | 'done'
   const [search, setSearch] = useState({ status: 'idle', results: [] });
-  const timerRef = useRef(null);
 
   const [selectedMember, setSelectedMember] = useState(null);
 
@@ -131,22 +130,19 @@ function DirectoryPage() {
   );
 
   function handleSearch() {
-    const results = applyFilters(members, {
-      q:       query.trim().toLowerCase(),
-      domaine: filterDomaine,
-      ville:   filterVille,
-      dispo:   filterDispo,
-      service: filterService,
+    setSearch({
+      status: 'done',
+      results: applyFilters(members, {
+        q:       query.trim().toLowerCase(),
+        domaine: filterDomaine,
+        ville:   filterVille,
+        dispo:   filterDispo,
+        service: filterService,
+      }),
     });
-    setSearch({ status: 'loading', results: [] });
-    clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(() => {
-      setSearch({ status: 'done', results });
-    }, 800);
   }
 
   function resetSearch() {
-    clearTimeout(timerRef.current);
     setQuery('');
     setFilterDomaine('');
     setFilterVille('');
@@ -265,7 +261,7 @@ function DirectoryPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {error
           ? <ErrorState message={error} />
-          : (loading || search.status === 'loading')
+          : loading
             ? Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)
             : search.status === 'idle'
               ? <EmptyPrompt />

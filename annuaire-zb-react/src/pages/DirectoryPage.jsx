@@ -131,14 +131,20 @@ function DirectoryPage() {
   );
 
   function handleSearch() {
-    const results = applyFilters(members, {
+    // Capture everything synchronously before the timeout
+    const snapshot = {
+      members: members,
       q:       query.trim().toLowerCase(),
       domaine: filterDomaine,
       ville:   filterVille,
       dispo:   filterDispo,
       service: filterService,
-    });
-    setSearch({ status: 'done', results });
+    };
+    setSearch({ status: 'searching', results: [] });
+    setTimeout(() => {
+      const results = applyFilters(snapshot.members, snapshot);
+      setSearch({ status: 'done', results });
+    }, 800);
   }
 
   function resetSearch() {

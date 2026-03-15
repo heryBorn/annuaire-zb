@@ -147,6 +147,13 @@ function DirectoryPage() {
     }, 800);
   }
 
+  // Clear displayed results whenever any filter input changes
+  function clearResults() {
+    setDisplayResults([]);
+    setHasSearched(false);
+    setSearching(false);
+  }
+
   function resetSearch() {
     setQuery('');
     setFilterDomaine('');
@@ -195,7 +202,7 @@ function DirectoryPage() {
             <input
               type="text"
               value={query}
-              onChange={e => setQuery(e.target.value)}
+              onChange={e => { setQuery(e.target.value); clearResults(); }}
               onKeyDown={e => { if (e.key === 'Enter') handleSearch(); }}
               placeholder="Rechercher un nom, métier, compétence..."
               className="w-full pl-9 pr-3 py-2 border border-sand rounded-lg font-sans text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-terracotta/40"
@@ -231,22 +238,22 @@ function DirectoryPage() {
           }`}
         >
           <div className="flex flex-wrap gap-2 mt-3">
-            <select value={filterDomaine} onChange={e => setFilterDomaine(e.target.value)} className={SELECT_CLS}>
+            <select value={filterDomaine} onChange={e => { setFilterDomaine(e.target.value); clearResults(); }} className={SELECT_CLS}>
               <option value="">🗂 Tous les domaines</option>
               {DOMAINES.map(d => <option key={d} value={d}>{d}</option>)}
             </select>
 
-            <select value={filterVille} onChange={e => setFilterVille(e.target.value)} className={SELECT_CLS}>
+            <select value={filterVille} onChange={e => { setFilterVille(e.target.value); clearResults(); }} className={SELECT_CLS}>
               <option value="">📍 Toutes les villes</option>
               {cities.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
 
-            <select value={filterDispo} onChange={e => setFilterDispo(e.target.value)} className={SELECT_CLS}>
+            <select value={filterDispo} onChange={e => { setFilterDispo(e.target.value); clearResults(); }} className={SELECT_CLS}>
               <option value="">🟢 Toute disponibilité</option>
               {DISPOS.map(d => <option key={d.value} value={d.value}>{d.label}</option>)}
             </select>
 
-            <select value={filterService} onChange={e => setFilterService(e.target.value)} className={SELECT_CLS}>
+            <select value={filterService} onChange={e => { setFilterService(e.target.value); clearResults(); }} className={SELECT_CLS}>
               <option value="">💼 Tout type de service</option>
               {SERVICES.map(s => <option key={s} value={s}>{s}</option>)}
             </select>

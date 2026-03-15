@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faXmark, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import MemberCard from '../components/MemberCard';
@@ -131,18 +132,18 @@ function DirectoryPage() {
   );
 
   function handleSearch() {
-    // Capture everything synchronously before the timeout
-    const snapshot = {
-      members: members,
-      q:       query.trim().toLowerCase(),
-      domaine: filterDomaine,
-      ville:   filterVille,
-      dispo:   filterDispo,
-      service: filterService,
-    };
-    setSearch({ status: 'searching', results: [] });
+    const q       = query.trim().toLowerCase();
+    const domaine = filterDomaine;
+    const ville   = filterVille;
+    const dispo   = filterDispo;
+    const service = filterService;
+    const snap    = members;
+
+    // Force React to paint skeletons synchronously before the timeout starts
+    flushSync(() => setSearch({ status: 'searching', results: [] }));
+
     setTimeout(() => {
-      const results = applyFilters(snapshot.members, snapshot);
+      const results = applyFilters(snap, { q, domaine, ville, dispo, service });
       setSearch({ status: 'done', results });
     }, 800);
   }

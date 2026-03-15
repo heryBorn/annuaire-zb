@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faXmark, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import MemberCard from '../components/MemberCard';
@@ -109,18 +109,22 @@ function DirectoryPage() {
   const [trigger] = useState(1);
   const { members, loading, error } = useMemberFetch({ trigger });
 
-  // Live filter inputs (controlled — change freely without affecting results)
-  const [query,          setQuery]          = useState('');
-  const [filterDomaine,  setFilterDomaine]  = useState('');
-  const [filterVille,    setFilterVille]    = useState('');
-  const [filterDispo,    setFilterDispo]    = useState('');
-  const [filterService,  setFilterService]  = useState('');
-  const [filterOpen,     setFilterOpen]     = useState(false);
+  // Always-current members ref so setTimeout closures never see stale data
+  const membersRef = useRef(members);
+  membersRef.current = members;
 
-  // Display state — only set inside handleSearch, never reactive
-  const [displayResults, setDisplayResults] = useState([]);
-  const [hasSearched,    setHasSearched]    = useState(false);
-  const [searching,      setSearching]      = useState(false);
+  // Live filter inputs
+  const [query,         setQuery]         = useState('');
+  const [filterDomaine, setFilterDomaine] = useState('');
+  const [filterVille,   setFilterVille]   = useState('');
+  const [filterDispo,   setFilterDispo]   = useState('');
+  const [filterService, setFilterService] = useState('');
+  const [filterOpen,    setFilterOpen]    = useState(false);
+
+  // Single atomic search state — one setState per transition, no intermediate renders
+  // status: 'idle' | 'searching' | 'done'
+  const [search, setSearch] = useState({ status: 'idle', results: [] });
+
   const [selectedMember, setSelectedMember] = useState(null);
 
   const stats = useMemo(() => deriveStats(members), [members]);
@@ -131,21 +135,17 @@ function DirectoryPage() {
   );
 
   function handleSearch() {
-    setDisplayResults([]);
-    setHasSearched(false);
-    setSearching(true);
+    // Capture filter values now (before the timeout closure)
+    const q       = query.trim().toLowerCase();
+    const domaine = filterDomaine;
+    const ville   = filterVille;
+    const dispo   = filterDispo;
+    const service = filterService;
+
+    setSearch({ status: 'searching', results: [] }); // one call — old results gone instantly
     setTimeout(() => {
-      // Capture live inputs, apply all filters together, commit in one setState call
-      const results = applyFilters(members, {
-        q:       query.trim().toLowerCase(),
-        domaine: filterDomaine,
-        ville:   filterVille,
-        dispo:   filterDispo,
-        service: filterService,
-      });
-      setDisplayResults(results);
-      setHasSearched(true);
-      setSearching(false);
+      const results = applyFilters(membersRef.current, { q, domaine, ville, dispo, service });
+      setSearch({ status: 'done', results });         // one call — atomic transition
     }, 800);
   }
 
@@ -155,9 +155,7 @@ function DirectoryPage() {
     setFilterVille('');
     setFilterDispo('');
     setFilterService('');
-    setDisplayResults([]);
-    setHasSearched(false);
-    setSearching(false);
+    setSearch({ status: 'idle', results: [] });
     setSelectedMember(null);
   }
 
@@ -270,13 +268,13 @@ function DirectoryPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {error
           ? <ErrorState message={error} />
-          : (loading || searching)
+          : (loading || search.status === 'searching')
             ? Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)
-            : !hasSearched
+            : search.status === 'idle'
               ? <EmptyPrompt />
-              : displayResults.length === 0
+              : search.results.length === 0
                 ? <NoResults />
-                : displayResults.map((m, index) => (
+                : search.results.map((m, index) => (
                     <div
                       key={m.email || m.nom}
                       className="animate-fade-slide-up"

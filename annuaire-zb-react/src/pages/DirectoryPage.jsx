@@ -1,5 +1,4 @@
-import { useMemo, useState } from 'react';
-import { flushSync } from 'react-dom';
+import { useEffect, useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faXmark, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import MemberCard from '../components/MemberCard';
@@ -121,6 +120,8 @@ function DirectoryPage() {
   // Single atomic search state — one setState per transition, no intermediate renders
   // status: 'idle' | 'searching' | 'done'
   const [search, setSearch] = useState({ status: 'idle', results: [] });
+  // pendingFilters triggers the useEffect after 'searching' is painted
+  const [pendingFilters, setPendingFilters] = useState(null);
 
   const [selectedMember, setSelectedMember] = useState(null);
 
@@ -131,22 +132,29 @@ function DirectoryPage() {
     [members]
   );
 
+  // Click handler: clear results + record which filters to apply
   function handleSearch() {
-    const q       = query.trim().toLowerCase();
-    const domaine = filterDomaine;
-    const ville   = filterVille;
-    const dispo   = filterDispo;
-    const service = filterService;
-    const snap    = members;
-
-    // Force React to paint skeletons synchronously before the timeout starts
-    flushSync(() => setSearch({ status: 'searching', results: [] }));
-
-    setTimeout(() => {
-      const results = applyFilters(snap, { q, domaine, ville, dispo, service });
-      setSearch({ status: 'done', results });
-    }, 800);
+    setSearch({ status: 'searching', results: [] });
+    setPendingFilters({
+      q:       query.trim().toLowerCase(),
+      domaine: filterDomaine,
+      ville:   filterVille,
+      dispo:   filterDispo,
+      service: filterService,
+      _ts:     Date.now(), // force effect to re-run even with identical filters
+    });
   }
+
+  // Effect runs after the 'searching' render is committed to the DOM —
+  // old results are guaranteed gone before the timer fires
+  useEffect(() => {
+    if (!pendingFilters) return;
+    const { _ts, ...filters } = pendingFilters;
+    const t = setTimeout(() => {
+      setSearch({ status: 'done', results: applyFilters(members, filters) });
+    }, 800);
+    return () => clearTimeout(t); // cancel if user clicks again before 800ms
+  }, [pendingFilters]); // eslint-disable-line react-hooks/exhaustive-deps
 
   function resetSearch() {
     setQuery('');
@@ -155,6 +163,7 @@ function DirectoryPage() {
     setFilterDispo('');
     setFilterService('');
     setSearch({ status: 'idle', results: [] });
+    setPendingFilters(null);
     setSelectedMember(null);
   }
 

@@ -25,6 +25,7 @@ const DOMAINES = [
   'Services à la personne',
   'Sport & Bien-être',
   'Transport & Logistique',
+  'Topographie & foncier',
   'Autre',
 ];
 
@@ -36,34 +37,15 @@ const EXPERIENCE_OPTIONS = [
   'Plus de 20 ans',
 ];
 
-const DISPONIBILITE_OPTIONS = [
-  'Disponible (actif)',
-  'Partiellement disponible',
-  'Non disponible (en poste)',
-  "À la recherche d'opportunités",
-];
-
-const TYPE_SERVICE_OPTIONS = [
-  'Emploi / Recrutement',
-  'Mission freelance',
-  'Bénévolat / Entraide',
-  'Vente de produits / services',
-  'Partenariat',
-];
-
-const SKILLS_OPTIONS = [
-  'Gestion de projet',
-  'Design graphique',
-  'Développement web',
-  'Comptabilité',
-  'Droit',
-  'Agriculture bio',
-  'Menuiserie',
-  'Électricité',
-  'Plomberie',
-  'Cuisine',
-  'Couture',
-  'Médecine',
+const NIVEAUX = [
+  'L1',
+  'L2',
+  'L3',
+  'M1',
+  'M2',
+  'D1',
+  'D2',
+  'D3'
 ];
 
 // ── Image compression helper ──────────────────────────────────────────────────
@@ -94,20 +76,25 @@ function InscriptionPage() {
   const [fields, setFields] = useState({
     prenom: '',
     nom: '',
+    age : 14,
+    sex : '',
+    adresse : '',
+    ville : '',
     email: '',
     telephone: '',
-    ville: '',
-    region: '',
+    whatsapp: '',
+    fb_account: '',
     metier: '',
     entreprise: '',
     domaine: '',
     experience: '',
     bio: '',
-    site_web: '',
-    linkedin: '',
-    disponibilite: '',
-    type_service: '',
-    competences: [],
+    commune: '',
+    district: '',
+    specialite: '',
+    universite: '',
+    etablissement: '',
+    niveau: '',
     consent: false,
   });
   const [errors, setErrors] = useState({});
@@ -128,11 +115,21 @@ function InscriptionPage() {
 
   // ── Validation ───────────────────────────────────────────────────────────────
 
-  function validate() {
+  function validate() 
+  {
     const errs = {};
     if (!photoBase64) errs.photo = 'Une photo est requise.';
     if (!fields.prenom.trim()) errs.prenom = 'Prénom requis.';
     if (!fields.nom.trim()) errs.nom = 'Nom requis.';
+    if (!fields.age || fields.age < 14) errs.age = 'Âge requis (minimum 14 ans).';
+    if (!fields.sex) errs.sex = 'Sexe requis.';
+    if (!fields.adresse.trim()) errs.adresse = 'Adresse requise.';
+    if (!fields.commune.trim()) errs.commune = 'Commune requise.';
+    if (!fields.district.trim()) errs.district = 'District requis.';
+    if (!fields.universite.trim()) errs.universite = 'Université requise.';
+    if (!fields.etablissement.trim()) errs.etablissement = 'Etablissement requis.';
+    if (!fields.niveau) errs.niveau = 'Niveau requis.';
+
     if (!fields.email.trim()) {
       errs.email = 'Email requis.';
     } else if (!/\S+@\S+\.\S+/.test(fields.email)) {
@@ -140,9 +137,10 @@ function InscriptionPage() {
     }
     if (!fields.metier.trim()) errs.metier = 'Métier requis.';
     if (!fields.domaine) errs.domaine = 'Domaine requis.';
+    if (!fields.niveau) errs.niveau = 'Niveau requis.';
     if (!fields.ville.trim()) errs.ville = 'Ville requise.';
     if (!fields.bio.trim()) {
-      errs.bio = 'Bio requise.';
+      errs.bio = 'Informations complémentaires requise.';
     } else if (fields.bio.trim().length < 50) {
       errs.bio = 'Minimum 50 caractères.';
     }
@@ -155,16 +153,6 @@ function InscriptionPage() {
   function handleField(e) {
     const { name, value, type, checked } = e.target;
     setFields(f => ({ ...f, [name]: type === 'checkbox' ? checked : value }));
-  }
-
-  function handleSkillToggle(skill) {
-    setFields(f => {
-      const current = f.competences;
-      const next = current.includes(skill)
-        ? current.filter(s => s !== skill)
-        : [...current, skill];
-      return { ...f, competences: next };
-    });
   }
 
   async function handlePhotoChange(e) {
@@ -203,20 +191,25 @@ function InscriptionPage() {
     const payload = {
       prenom: fields.prenom.trim(),
       nom: fields.nom.trim(),
+      age: fields.age,
+      sex: fields.sex,
+      adresse: fields.adresse.trim(),
+      ville: fields.ville.trim(),
       email: fields.email.trim(),
       telephone: fields.telephone.trim(),
-      ville: fields.ville.trim(),
-      region: fields.region.trim(),
+      whatsapp: fields.whatsapp.trim(),
+      fb_account: fields.fb_account.trim(),
+      bio: fields.bio.trim(),
+      commune: fields.commune.trim(),
+      district: fields.district.trim(),
       metier: fields.metier.trim(),
       entreprise: fields.entreprise.trim(),
       domaine: fields.domaine,
       experience: fields.experience,
-      competences: fields.competences.join(', '),
-      bio: fields.bio.trim(),
-      site_web: fields.site_web.trim(),
-      linkedin: fields.linkedin.trim(),
-      disponibilite: fields.disponibilite,
-      type_service: fields.type_service,
+      specialite: fields.specialite.trim(),
+      universite: fields.universite.trim(),
+      etablissement: fields.etablissement.trim(),
+      niveau: fields.niveau,
       statut: 'EN ATTENTE',
       date_inscription: new Date().toLocaleDateString('fr-FR'),
       photo_base64: photoBase64,
@@ -290,12 +283,36 @@ function InscriptionPage() {
           </button>
         </div>
       )}
+
+      {/* Hero — matches DirectoryPage style */}
+      <section
+        className="text-cream pt-24 pb-10 px-6 relative overflow-hidden"
+        style={{ background: 'linear-gradient(160deg, #2C1A0E 0%, #3A2010 50%, #5A2E10 100%)' }}
+      >
+        <div className="absolute inset-0 pointer-events-none" style={{
+          backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(232,201,122,0.06) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(193,68,14,0.1) 0%, transparent 40%)'
+        }} />
+        <div className="relative z-10 max-w-3xl mx-auto text-center">
+          <span className="inline-block font-sans text-xs uppercase tracking-widest px-4 py-1.5 rounded-full mb-5" style={{ background: 'rgba(232,201,122,0.15)', border: '1px solid rgba(232,201,122,0.3)', color: '#E8C97A' }}>
+            Formulaire d'inscription
+          </span>
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-cream leading-tight">
+            Rejoignez <em className="text-wheat italic">l'annuaire</em>
+          </h1>
+          <p className="font-sans text-sm text-cream/70 mt-3 max-w-lg mx-auto">
+            Renseignez vos informations. Votre fiche sera examinée par le président avant publication.
+          </p>
+        </div>
+      </section>
+
       <main className="max-w-3xl mx-auto px-6 py-10">
-      {/* Page header */}
-      <div className="mb-8">
-        <h1 className="font-serif text-3xl font-bold text-soil mb-2">Rejoignez l'annuaire</h1>
-        <p className="font-sans text-sm text-muted leading-relaxed">
-          Renseignez vos informations. Votre fiche sera examinée par le président avant publication.
+
+      {/* Validation notice */}
+      <div className="flex gap-3 items-start rounded-lg mb-8 px-5 py-4" style={{ background: '#FFF8E7', border: '1px solid #E8C97A', borderLeft: '4px solid #C1440E' }}>
+        <span className="text-xl shrink-0">⏳</span>
+        <p className="font-sans text-sm leading-relaxed" style={{ color: '#7A5C2A' }}>
+          <strong className="font-semibold" style={{ color: '#2C1A0E' }}>Validation requise :</strong>{' '}
+          Après soumission, votre fiche sera examinée par le président de l'association. Vous recevrez une notification par email une fois validée.
         </p>
       </div>
 
@@ -306,7 +323,7 @@ function InscriptionPage() {
           {/* ── Left column: photo zone ── */}
           <div className="flex flex-col items-center md:items-start">
             <label className="font-sans text-xs font-semibold text-ink mb-2 block">
-              Photo de profil{opt}
+              Photo de profil <span className="text-terracotta">*</span>
             </label>
 
             {/* Photo zone */}
@@ -366,7 +383,7 @@ function InscriptionPage() {
 
             {/* ── Section: Identité ── */}
             <section>
-              <SectionHeading>Identité</SectionHeading>
+              <SectionHeading>Identité personnelle</SectionHeading>
               <div className="space-y-4">
                 {/* Prénom + Nom */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -381,7 +398,7 @@ function InscriptionPage() {
                       value={fields.prenom}
                       onChange={handleField}
                       className={errors.prenom ? INPUT_ERR_CLS : INPUT_CLS}
-                      placeholder="Marie"
+                      placeholder="Rakoto"
                     />
                     <FieldError name="prenom" />
                   </div>
@@ -396,16 +413,145 @@ function InscriptionPage() {
                       value={fields.nom}
                       onChange={handleField}
                       className={errors.nom ? INPUT_ERR_CLS : INPUT_CLS}
-                      placeholder="Dupont"
+                      placeholder="Malala"
                     />
                     <FieldError name="nom" />
                   </div>
                 </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="font-sans text-xs font-semibold text-ink mb-1 block" htmlFor="age">
+                      Age <span className="text-terracotta">*</span>
+                    </label>
+                    <input
+                      id="age"
+                      name="age"
+                      type="number"
+                      value={fields.age}
+                      onChange={handleField}
+                      className={errors.age ? INPUT_ERR_CLS : INPUT_CLS}
+                      min={14}
+                    />
+                    <FieldError name="age" />
+                  </div>
+                  <div>
+                    <label className="font-sans text-xs font-semibold text-ink mb-1 block" htmlFor="sex">
+                      Sexe <span className="text-terracotta">*</span>
+                    </label>
+                    <select
+                      id="sex"
+                      name="sex"
+                      value={fields.sex}
+                      onChange={handleField}
+                      className={errors.sex ? INPUT_ERR_CLS : INPUT_CLS}
+                    >
+                      <option value="">Sélectionnez votre sexe</option>
+                      <option value="homme">Homme</option>
+                      <option value="femme">Femme</option>
+                    </select>
+                    <FieldError name="sex" />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="font-sans text-xs font-semibold text-ink mb-1 block" htmlFor="adresse">
+                      Adresse <span className="text-terracotta">*</span>
+                    </label>
+                    <input
+                      id="adresse"
+                      name="adresse"
+                      type="text"
+                      value={fields.adresse}
+                      onChange={handleField}
+                      className={errors.adresse ? INPUT_ERR_CLS : INPUT_CLS}
+                      placeholder="Lot III S, Ambatomainty, Tsiroanomandidy"
+                    />
+                    <FieldError name="adresse" />
+                  </div>
+                  <div>
+                    <label className="font-sans text-xs font-semibold text-ink mb-1 block" htmlFor="ville">
+                      Ville <span className="text-terracotta">*</span>
+                    </label>
+                    <input
+                      id="ville"
+                      name="ville"
+                      type="text"
+                      value={fields.ville}
+                      onChange={handleField}
+                      className={errors.ville ? INPUT_ERR_CLS : INPUT_CLS}
+                      placeholder="Antananarivo"
+                    />
+                    <FieldError name="ville" />
+                  </div>
+                </div>
+                {/* Email + Téléphone */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="font-sans text-xs font-semibold text-ink mb-1 block" htmlFor="email">
+                      Email <span className="text-terracotta">*</span>
+                    </label>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={fields.email}
+                      onChange={handleField}
+                      className={errors.email ? INPUT_ERR_CLS : INPUT_CLS}
+                      placeholder="marie@exemple.fr"
+                    />
+                    <FieldError name="email" />
+                  </div>
+                  <div>
+                    <label className="font-sans text-xs font-semibold text-ink mb-1 block" htmlFor="telephone">
+                      Mobile{opt}
+                    </label>
+                    <input
+                      id="telephone"
+                      name="telephone"
+                      type="tel"
+                      value={fields.telephone}
+                      onChange={handleField}
+                      className={INPUT_CLS}
+                      placeholder="+261 34 00 002 00"
+                    />
+                  </div>
+                </div>
 
+                {/* LinkedIn + Site web */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="font-sans text-xs font-semibold text-ink mb-1 block" htmlFor="whatsapp">
+                      Whatsapp{opt}
+                    </label>
+                    <input
+                      id="whatsapp"
+                      name="whatsapp"
+                      type="url"
+                      value={fields.whatsapp}
+                      onChange={handleField}
+                      className={INPUT_CLS}
+                      placeholder="+261 34 00 002 00"
+                    />
+                  </div>
+                  <div>
+                    <label className="font-sans text-xs font-semibold text-ink mb-1 block" htmlFor="fb_account">
+                      Compte facebook{opt}
+                    </label>
+                    <input
+                      id="fb_account"
+                      name="fb_account"
+                      type="url"
+                      value={fields.fb_account}
+                      onChange={handleField}
+                      className={INPUT_CLS}
+                      placeholder="Rakoto Malala"
+                    />
+                  </div>
+                </div>
                 {/* Bio */}
                 <div>
                   <label className="font-sans text-xs font-semibold text-ink mb-1 block" htmlFor="bio">
-                    Présentation / Bio <span className="text-terracotta">*</span>
+                    Informations complémentaires <span className="text-terracotta">*</span>
                   </label>
                   <textarea
                     id="bio"
@@ -421,10 +567,48 @@ function InscriptionPage() {
                 </div>
               </div>
             </section>
-
-            {/* ── Section: Activité ── */}
+            {/* ── Section: Contact ── */}
             <section>
-              <SectionHeading>Activité professionnelle</SectionHeading>
+              <SectionHeading>Origine</SectionHeading>
+              <div className="space-y-4">
+                {/* Ville + Région */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="font-sans text-xs font-semibold text-ink mb-1 block" htmlFor="commune">
+                      Commune <span className="text-terracotta">*</span>
+                    </label>
+                    <input
+                      id="commune"
+                      name="commune"
+                      type="text"
+                      value={fields.commune}
+                      onChange={handleField}
+                      className={errors.commune ? INPUT_ERR_CLS : INPUT_CLS}
+                      placeholder="Ex : Tsiroanomandidy ville"
+                    />
+                    <FieldError name="commune" />
+                  </div>
+                  <div>
+                    <label className="font-sans text-xs font-semibold text-ink mb-1 block" htmlFor="district">
+                      District <span className="text-terracotta">*</span>
+                    </label>
+                    <input
+                      id="district"
+                      name="district"
+                      type="text"
+                      value={fields.district}
+                      onChange={handleField}
+                      className={INPUT_CLS}
+                      placeholder="Ex : Tsiroanomandidy"
+                    />
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* ── Section: Identité ── */}
+            <section>
+              <SectionHeading>Identité professionnelle</SectionHeading>
               <div className="space-y-4">
                 {/* Métier + Entreprise */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -445,7 +629,7 @@ function InscriptionPage() {
                   </div>
                   <div>
                     <label className="font-sans text-xs font-semibold text-ink mb-1 block" htmlFor="entreprise">
-                      Entreprise / Statut{opt}
+                      Entreprise / Etablissement <span className="text-terracotta">*</span>
                     </label>
                     <input
                       id="entreprise"
@@ -497,174 +681,82 @@ function InscriptionPage() {
                     </select>
                   </div>
                 </div>
-
-                {/* Disponibilité + Type service */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-1 gap-4">
                   <div>
-                    <label className="font-sans text-xs font-semibold text-ink mb-1 block" htmlFor="disponibilite">
-                      Disponibilité{opt}
+                    <label className="font-sans text-xs font-semibold text-ink mb-1 block" htmlFor="specialite">
+                      Spécialité{opt}
                     </label>
-                    <select
-                      id="disponibilite"
-                      name="disponibilite"
-                      value={fields.disponibilite}
+                    <textarea
+                      id="specialite"
+                      name="specialite"
+                      rows={3}
+                      value={fields.specialite}
                       onChange={handleField}
-                      className={INPUT_CLS}
-                    >
-                      <option value="">-- Choisir --</option>
-                      {DISPONIBILITE_OPTIONS.map(o => (
-                        <option key={o} value={o}>{o}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="font-sans text-xs font-semibold text-ink mb-1 block" htmlFor="type_service">
-                      Type de service proposé{opt}
-                    </label>
-                    <select
-                      id="type_service"
-                      name="type_service"
-                      value={fields.type_service}
-                      onChange={handleField}
-                      className={INPUT_CLS}
-                    >
-                      <option value="">-- Choisir --</option>
-                      {TYPE_SERVICE_OPTIONS.map(o => (
-                        <option key={o} value={o}>{o}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                {/* Compétences checkboxes */}
-                <div>
-                  <p className="font-sans text-xs font-semibold text-ink mb-2">
-                    Compétences clés{opt}
-                  </p>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                    {SKILLS_OPTIONS.map(skill => (
-                      <label
-                        key={skill}
-                        className="flex items-center gap-2 cursor-pointer"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={fields.competences.includes(skill)}
-                          onChange={() => handleSkillToggle(skill)}
-                          className="accent-terracotta w-4 h-4 rounded"
-                        />
-                        <span className="font-sans text-xs text-ink leading-tight">{skill}</span>
-                      </label>
-                    ))}
+                      className={errors.specialite ? INPUT_ERR_CLS : INPUT_CLS}
+                      placeholder="Décrivez votre spécialité..."
+                    />
                   </div>
                 </div>
               </div>
             </section>
 
-            {/* ── Section: Contact ── */}
+            {/* ── Section: Identité estudiantine ── */}
             <section>
-              <SectionHeading>Contact &amp; localisation</SectionHeading>
+              <SectionHeading>Identité estudiantine</SectionHeading>
               <div className="space-y-4">
-                {/* Ville + Région */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="font-sans text-xs font-semibold text-ink mb-1 block" htmlFor="ville">
-                      Ville / Village <span className="text-terracotta">*</span>
+                    <label className="font-sans text-xs font-semibold text-ink mb-1 block" htmlFor="universite">
+                      Université <span className="text-terracotta">*</span>
                     </label>
                     <input
-                      id="ville"
-                      name="ville"
+                      id="universite"
+                      name="universite"
                       type="text"
-                      value={fields.ville}
+                      value={fields.universite}
                       onChange={handleField}
-                      className={errors.ville ? INPUT_ERR_CLS : INPUT_CLS}
-                      placeholder="Ex : Saint-Martin"
+                      className={errors.universite ? INPUT_ERR_CLS : INPUT_CLS}
+                      placeholder="Ex : Antananarivo..."
                     />
-                    <FieldError name="ville" />
+                    <FieldError name="universite" />
                   </div>
                   <div>
-                    <label className="font-sans text-xs font-semibold text-ink mb-1 block" htmlFor="region">
-                      Département / Région{opt}
+                    <label className="font-sans text-xs font-semibold text-ink mb-1 block" htmlFor="etablissement">
+                      Etablissement <span className="text-terracotta">*</span>
                     </label>
                     <input
-                      id="region"
-                      name="region"
+                      id="etablissement"
+                      name="etablissement"
                       type="text"
-                      value={fields.region}
+                      value={fields.etablissement}
                       onChange={handleField}
                       className={INPUT_CLS}
-                      placeholder="Ex : Occitanie"
+                      placeholder="Ex : ESPA, ESSA..."
                     />
                   </div>
                 </div>
-
-                {/* Email + Téléphone */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="font-sans text-xs font-semibold text-ink mb-1 block" htmlFor="email">
-                      Email <span className="text-terracotta">*</span>
+                    <label className="font-sans text-xs font-semibold text-ink mb-1 block" htmlFor="niveau">
+                      Niveau <span className="text-terracotta">*</span>
                     </label>
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={fields.email}
+                    <select
+                      id="niveau"
+                      name="niveau"
+                      value={fields.niveau}
                       onChange={handleField}
-                      className={errors.email ? INPUT_ERR_CLS : INPUT_CLS}
-                      placeholder="marie@exemple.fr"
-                    />
-                    <FieldError name="email" />
-                  </div>
-                  <div>
-                    <label className="font-sans text-xs font-semibold text-ink mb-1 block" htmlFor="telephone">
-                      Téléphone{opt}
-                    </label>
-                    <input
-                      id="telephone"
-                      name="telephone"
-                      type="tel"
-                      value={fields.telephone}
-                      onChange={handleField}
-                      className={INPUT_CLS}
-                      placeholder="+33 6 00 00 00 00"
-                    />
-                  </div>
-                </div>
-
-                {/* LinkedIn + Site web */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="font-sans text-xs font-semibold text-ink mb-1 block" htmlFor="linkedin">
-                      LinkedIn{opt}
-                    </label>
-                    <input
-                      id="linkedin"
-                      name="linkedin"
-                      type="url"
-                      value={fields.linkedin}
-                      onChange={handleField}
-                      className={INPUT_CLS}
-                      placeholder="https://linkedin.com/in/..."
-                    />
-                  </div>
-                  <div>
-                    <label className="font-sans text-xs font-semibold text-ink mb-1 block" htmlFor="site_web">
-                      Site web / Portfolio{opt}
-                    </label>
-                    <input
-                      id="site_web"
-                      name="site_web"
-                      type="url"
-                      value={fields.site_web}
-                      onChange={handleField}
-                      className={INPUT_CLS}
-                      placeholder="https://monsite.fr"
-                    />
+                      className={errors.niveau ? INPUT_ERR_CLS : INPUT_CLS}
+                    >
+                      <option value="">-- Choisir --</option>
+                      {NIVEAUX.map(n => (
+                        <option key={n} value={n}>{n}</option>
+                      ))}
+                    </select>
+                    <FieldError name="niveau" />
                   </div>
                 </div>
               </div>
             </section>
-
           </div>
           {/* end right column */}
         </div>

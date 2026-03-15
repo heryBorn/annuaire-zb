@@ -98,6 +98,12 @@ None — no external service configuration required.
 - DES-04: Card stagger entrance animation (Plan 02)
 - Entire v1.0 milestone complete — ready for deployment or post-launch iteration
 
+## Self-Check: PASSED
+
+- FOUND: annuaire-zb-react/src/pages/DirectoryPage.jsx
+- FOUND: commit 5231a58 (feat — collapsible filter panel)
+- FOUND: commit 0a429af (chore — audit no-op)
+
 ---
 *Phase: 06-design-polish*
 *Completed: 2026-03-14*

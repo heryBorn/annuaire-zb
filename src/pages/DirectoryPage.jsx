@@ -21,22 +21,8 @@ const DOMAINES = [
   'Services à la personne',
   'Sport & Bien-être',
   'Transport & Logistique',
+  'Topographie & foncier',
   'Autre',
-];
-
-const DISPOS = [
-  { value: 'Disponible',     label: 'Disponible' },
-  { value: 'Partiellement',  label: 'Partiellement disponible' },
-  { value: 'Non disponible', label: 'Non disponible' },
-  { value: 'Recherche',      label: 'En recherche' },
-];
-
-const SERVICES = [
-  'Emploi / Recrutement',
-  'Mission freelance',
-  'Bénévolat / Entraide',
-  'Vente de produits / services',
-  'Partenariat',
 ];
 
 const SELECT_CLS = 'border border-sand rounded-lg font-sans text-sm text-ink px-3 py-2 focus:outline-none focus:ring-2 focus:ring-terracotta/40 bg-white';
@@ -48,17 +34,14 @@ function applyFilters(members, { q, domaine, ville, dispo, service }) {
     if (q      && !text.includes(q))                               return false;
     if (domaine && m.domaine      !== domaine)                      return false;
     if (ville   && m.ville        !== ville)                        return false;
-    if (dispo   && !(m.disponibilite || '').includes(dispo))        return false;
-    if (service && m.type_service !== service)                      return false;
     return true;
   });
 }
 
 function deriveStats(members) {
   return {
-    total:   members.length,
-    domains: new Set(members.map(m => m.domaine).filter(Boolean)).size,
-    villes:  new Set(members.map(m => m.ville).filter(Boolean)).size,
+    total:      members.length,
+    domains:    new Set(members.map(m => m.domaine).filter(Boolean)).size
   };
 }
 
@@ -113,9 +96,10 @@ function DirectoryPage() {
   const [query,         setQuery]         = useState('');
   const [filterDomaine, setFilterDomaine] = useState('');
   const [filterVille,   setFilterVille]   = useState('');
-  const [filterDispo,   setFilterDispo]   = useState('');
-  const [filterService, setFilterService] = useState('');
   const [filterOpen,    setFilterOpen]    = useState(false);
+  const [page,          setPage]          = useState(1);
+
+  const PAGE_SIZE = 20;
 
   // status: 'idle' | 'done'
   const [search,    setSearch]    = useState({ status: 'idle', results: [] });
@@ -132,17 +116,19 @@ function DirectoryPage() {
   );
 
   function handleSearch() {
+    const q = query.trim().toLowerCase();
+    const hasFilters = q || filterDomaine || filterVille ;
+    if (!hasFilters) return;
     const results = applyFilters(members, {
-      q:       query.trim().toLowerCase(),
+      q,
       domaine: filterDomaine,
       ville:   filterVille,
-      dispo:   filterDispo,
-      service: filterService,
     });
     setBusy(true);
     clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => {
       setSearch({ status: 'done', results });
+      setPage(1);
       setBusy(false);
     }, 800);
   }
@@ -153,31 +139,38 @@ function DirectoryPage() {
     setQuery('');
     setFilterDomaine('');
     setFilterVille('');
-    setFilterDispo('');
-    setFilterService('');
     setSearch({ status: 'idle', results: [] });
+    setPage(1);
     setSelectedMember(null);
   }
 
   const hasFilters =
-    query.trim() !== '' || filterDomaine !== '' || filterVille !== '' ||
-    filterDispo !== '' || filterService !== '';
+    query.trim() !== '' || filterDomaine !== '' || filterVille !== '';
 
   return (
     <>
       {/* Hero — full-bleed bg-soil band, outside max-w container */}
-      <section className="bg-soil text-cream pt-24 pb-10 px-6">
-        <div className="max-w-7xl mx-auto text-center">
+      <section
+        className="text-cream pt-24 pb-10 px-6 relative overflow-hidden"
+        style={{ background: 'linear-gradient(160deg, #2C1A0E 0%, #3A2010 50%, #5A2E10 100%)' }}
+      >
+        {/* Radial accent overlays */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(232,201,122,0.06) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(193,68,14,0.1) 0%, transparent 40%)'
+        }} />
+        <div className="relative z-10 max-w-7xl mx-auto text-center">
+          <span className="inline-block font-sans text-xs uppercase tracking-widest px-4 py-1.5 rounded-full mb-5" style={{ background: 'rgba(232,201,122,0.15)', border: '1px solid rgba(232,201,122,0.3)', color: '#E8C97A' }}>
+            Annuaire
+          </span>
           <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-cream leading-tight">
-            Annuaire Zanak'i Bongolava
+            Trouvez les <em className="text-wheat italic">membres</em><br className="hidden sm:block" /> de notre association
           </h1>
           <p className="font-sans text-sm text-cream/70 mt-3 max-w-lg mx-auto">
-            Découvrez les compétences et savoir-faire de vos voisins.
+            Découvrez les profils, compétences Recherchez et expérience de nos membres. Recherchez un membre par domaine, ville ou spécialité.
           </p>
           <div className="flex justify-center gap-8 sm:gap-12 mt-6">
-            <StatChip value={loading ? '…' : stats.total}   label="Membres" />
-            <StatChip value={loading ? '…' : stats.domains} label="Domaines" />
-            <StatChip value={loading ? '…' : stats.villes}  label="Villes" />
+            <StatChip value={loading ? '…' : stats.total}        label="Membres" />
+            <StatChip value={loading ? '…' : stats.domains}      label="Domaines" />
           </div>
         </div>
       </section>
@@ -241,16 +234,6 @@ function DirectoryPage() {
               {cities.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
 
-            <select value={filterDispo} onChange={e => setFilterDispo(e.target.value)} className={SELECT_CLS}>
-              <option value="">🟢 Toute disponibilité</option>
-              {DISPOS.map(d => <option key={d.value} value={d.value}>{d.label}</option>)}
-            </select>
-
-            <select value={filterService} onChange={e => setFilterService(e.target.value)} className={SELECT_CLS}>
-              <option value="">💼 Tout type de service</option>
-              {SERVICES.map(s => <option key={s} value={s}>{s}</option>)}
-            </select>
-
             {hasFilters && (
               <button
                 onClick={resetSearch}
@@ -272,29 +255,52 @@ function DirectoryPage() {
       )}
 
       {/* Results grid — completely separate DOM node, only mounted when not busy */}
-      {!loading && !busy && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {error
-            ? <ErrorState message={error} />
-            : search.status === 'idle'
-              ? <EmptyPrompt />
-              : search.results.length === 0
-                ? <NoResults />
-                : search.results.map((m, index) => (
-                    <div
-                      key={m.email || m.nom}
-                      className="animate-fade-slide-up"
-                      style={{ animationDelay: `${Math.min(index * 50, 400)}ms` }}
-                    >
-                      <MemberCard
-                        member={m}
-                        onClick={() => setSelectedMember(m)}
-                      />
-                    </div>
-                  ))
-          }
-        </div>
-      )}
+      {!loading && !busy && (() => {
+        if (error) return <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"><ErrorState message={error} /></div>;
+        if (search.status === 'idle') return <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"><EmptyPrompt /></div>;
+        if (search.results.length === 0) return <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"><NoResults /></div>;
+
+        const totalPages = Math.ceil(search.results.length / PAGE_SIZE);
+        const pageItems  = search.results.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+        return (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {pageItems.map((m, index) => (
+                <div
+                  key={m.email || m.nom}
+                  className="animate-fade-slide-up"
+                  style={{ animationDelay: `${Math.min(index * 50, 400)}ms` }}
+                >
+                  <MemberCard member={m} onClick={() => setSelectedMember(m)} />
+                </div>
+              ))}
+            </div>
+
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-3 mt-8">
+                <button
+                  onClick={() => setPage(p => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                  className="font-sans text-sm px-4 py-2 rounded-lg border border-sand text-ink disabled:opacity-40 hover:bg-sand/60 transition-colors"
+                >
+                  ← Précédent
+                </button>
+                <span className="font-sans text-sm text-muted">
+                  {page} / {totalPages}
+                </span>
+                <button
+                  onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages}
+                  className="font-sans text-sm px-4 py-2 rounded-lg border border-sand text-ink disabled:opacity-40 hover:bg-sand/60 transition-colors"
+                >
+                  Suivant →
+                </button>
+              </div>
+            )}
+          </>
+        );
+      })()}
       {selectedMember && (
         <MemberModal
           member={selectedMember}

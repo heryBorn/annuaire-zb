@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark, faGlobe, faEnvelope, faPhone, faLocationDot } from '@fortawesome/free-solid-svg-icons';
-import { faLinkedin } from '@fortawesome/free-brands-svg-icons';
-import AvailabilityBadge from './AvailabilityBadge';
+import { faXmark, faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons';
+import { faFacebook, faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 
 function MemberModal({ member: m, onClose }) {
   const [isVisible, setIsVisible] = useState(false);
@@ -28,19 +27,6 @@ function MemberModal({ member: m, onClose }) {
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
-
-  // Competences derivation — handles comma-separated string, array, or absent
-  const pills = (() => {
-    const raw = m.competences || m.skills || '';
-    if (!raw) return [];
-    if (Array.isArray(raw)) return raw.filter(Boolean);
-    return raw.split(',').map(s => s.trim()).filter(Boolean);
-  })();
-
-  // Site web URL normalization
-  const siteUrl = m.site_web
-    ? (m.site_web.startsWith('http') ? m.site_web : `https://${m.site_web}`)
-    : null;
 
   // Initials fallback
   const initials = ((m.prenom || '?')[0] + (m.nom || '?')[0]).toUpperCase();
@@ -88,12 +74,6 @@ function MemberModal({ member: m, onClose }) {
           {m.metier && <p className="font-sans text-sm text-muted text-center mt-0.5">{m.metier}</p>}
           {/* Entreprise */}
           {m.entreprise && <p className="font-sans text-xs text-muted text-center mt-0.5">{m.entreprise}</p>}
-          {/* Availability badge */}
-          {m.disponibilite && (
-            <div className="mt-3">
-              <AvailabilityBadge disponibilite={m.disponibilite} />
-            </div>
-          )}
         </div>
 
         <hr className="border-sand mx-6" />
@@ -108,54 +88,87 @@ function MemberModal({ member: m, onClose }) {
             </div>
           )}
 
-          {/* Competences pills */}
-          {pills.length > 0 && (
-            <div>
-              <p className="font-sans text-xs font-semibold uppercase tracking-wide text-muted mb-1.5">Compétences</p>
-              <div className="flex flex-wrap gap-1.5">
-                {pills.map(skill => (
-                  <span key={skill} className="bg-sand text-ink font-sans text-xs px-2.5 py-0.5 rounded-full">
-                    {skill}
-                  </span>
-                ))}
-              </div>
+          {/* Informations personnelles */}
+          <div>
+            <p className="font-sans text-xs font-semibold uppercase tracking-wide text-muted mb-2 border-b border-sand">Informations personnelles</p>
+            <div className="flex flex-col gap-1.5">
+              {[
+                { label: 'Adresse',        value: m.adresse },
+                { label: 'Age',        value: m.age },
+                { label: 'Sexe',       value: m.sex },
+                { label: 'Ville',   value: m.ville || null },
+              ].map(({ label, value }) => value ? (
+                <div key={label} className="flex gap-2 font-sans text-sm">
+                  <span className="text-muted shrink-0 w-28">{label}</span>
+                  <span className="text-ink">{value}</span>
+                </div>
+              ) : null)}
             </div>
-          )}
+          </div>
+          {/* Origine */}
+          <div>
+            <p className="font-sans text-xs font-semibold uppercase tracking-wide text-muted mb-2 border-b border-sand">Origine</p>
+            <div className="flex flex-col gap-1.5">
+              {[
+                { label: 'commune',        value: m.commune },
+                { label: 'District',        value: m.district }
+              ].map(({ label, value }) => value ? (
+                <div key={label} className="flex gap-2 font-sans text-sm">
+                  <span className="text-muted shrink-0 w-28">{label}</span>
+                  <span className="text-ink">{value}</span>
+                </div>
+              ) : null)}
+            </div>
+          </div>
+          {/* Informations professionnelles */}
+          <div>
+            <p className="font-sans text-xs font-semibold uppercase tracking-wide text-muted mb-2 border-b border-sand">Informations professionnelles</p>
+            <div className="flex flex-col gap-1.5">
+              {[
+                { label: 'Domaine',        value: m.domaine },
+                { label: 'Localisation',   value: m.ville || null },
+                { label: 'Expérience',     value: m.experience },
+                { label: 'Spécialité',     value: m.specialite }
+              ].map(({ label, value }) => value ? (
+                <div key={label} className="flex gap-2 font-sans text-sm">
+                  <span className="text-muted shrink-0 w-28">{label}</span>
+                  <span className="text-ink">{value}</span>
+                </div>
+              ) : null)}
+            </div>
+          </div>
 
-          {/* Localisation */}
-          {(m.ville || m.region) && (
-            <div className="flex items-center gap-2">
-              <FontAwesomeIcon icon={faLocationDot} className="text-terracotta shrink-0 text-sm" />
-              <p className="font-sans text-sm text-ink">
-                {[m.ville, m.region].filter(Boolean).join(', ')}
-              </p>
+          {/* Informations estudiantines */}
+          <div>
+            <p className="font-sans text-xs font-semibold uppercase tracking-wide text-muted mb-2 border-b border-sand">Informations estudiantines</p>
+            <div className="flex flex-col gap-1.5">
+              {[
+                { label: 'Université',        value: m.universite },
+                { label: 'Etablissement',   value: m.etablissement },
+                { label: 'Niveau',     value: m.niveau }
+              ].map(({ label, value }) => value ? (
+                <div key={label} className="flex gap-2 font-sans text-sm">
+                  <span className="text-muted shrink-0 w-28">{label}</span>
+                  <span className="text-ink">{value}</span>
+                </div>
+              ) : null)}
             </div>
-          )}
+          </div>
 
           {/* Social links */}
-          {(m.linkedin || siteUrl) && (
+          {(m.fb_account || m.whatsapp) && (
             <div className="flex gap-4">
-              {m.linkedin && (
-                <a
-                  href={m.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 font-sans text-sm text-muted hover:text-terracotta transition-colors"
-                >
-                  <FontAwesomeIcon icon={faLinkedin} />
-                  <span>LinkedIn</span>
-                </a>
+              {m.fb_account && (
+                  <>
+                    <FontAwesomeIcon icon={faFacebook} />
+                    <span>{m.fb_account}</span>
+                  </>
               )}
-              {siteUrl && (
-                <a
-                  href={siteUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 font-sans text-sm text-muted hover:text-terracotta transition-colors"
-                >
-                  <FontAwesomeIcon icon={faGlobe} />
-                  <span>Site web</span>
-                </a>
+              {m.whatsapp && (
+                <>
+                  <FontAwesomeIcon icon={faWhatsapp} />
+                  <span>{m.whatsapp}</span>
+                </>
               )}
             </div>
           )}

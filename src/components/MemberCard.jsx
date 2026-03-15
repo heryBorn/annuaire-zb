@@ -1,7 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot, faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons';
-import { faLinkedin } from '@fortawesome/free-brands-svg-icons';
-import AvailabilityBadge from './AvailabilityBadge';
+import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 
 // Drive's /uc and /thumbnail URLs redirect → ORB blocks them in-app.
 // lh3.googleusercontent.com/d/FILE_ID is the direct CDN URL — no redirect, no ORB.
@@ -50,18 +49,12 @@ function MemberCard({ member: m, onClick }) {
             {m.metier}
           </p>
         )}
-
-        {/* Availability */}
-        {m.disponibilite && (
-          <AvailabilityBadge disponibilite={m.disponibilite} />
-        )}
-
         {/* Localisation — ville + region */}
-        {(m.ville || m.region) && (
+        {(m.ville) && (
           <p className="font-sans text-xs text-muted flex items-center gap-1">
             <FontAwesomeIcon icon={faLocationDot} className="text-terracotta shrink-0" />
             <span className="truncate">
-              {[m.ville, m.region].filter(Boolean).join(', ')}
+              {m.ville}
             </span>
           </p>
         )}
@@ -99,15 +92,15 @@ function MemberCard({ member: m, onClick }) {
               <span>Appeler</span>
             </a>
           )}
-          {m.linkedin && (
+          {m.whatsapp && (
             <a
-              href={m.linkedin}
+              href={`https://wa.me/`}
               className="text-muted hover:text-terracotta transition-colors flex items-center gap-1.5 font-sans text-xs"
               onClick={e => e.stopPropagation()}
-              title={m.linkedin}
+              title={m.whatsapp}
             >
-              <FontAwesomeIcon icon={faLinkedin} />
-              <span>LinkedIn</span>
+              <FontAwesomeIcon icon={faWhatsapp} />
+              <span>WhatsApp</span>
             </a>
           )}
         </div>

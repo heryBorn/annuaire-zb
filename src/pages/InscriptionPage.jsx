@@ -154,7 +154,7 @@ function InscriptionPage() {
       errs.bio = 'Minimum 50 caractères.';
     }
     if (!fields.consent) errs.consent = 'Consentement requis.';
-    if (!captchaToken) errs.captcha = 'Veuillez cocher le CAPTCHA pour confirmer que vous n\êtes pas un robot.';
+    if (!captchaToken) errs.captcha = "Veuillez cocher le CAPTCHA pour confirmer que vous n'êtes pas un robot.";
     return errs;
   }
 

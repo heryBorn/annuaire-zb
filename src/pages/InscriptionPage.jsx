@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCamera, faCheck, faXmark, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import ReCAPTCHA from 'react-google-recaptcha';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -107,7 +110,9 @@ function InscriptionPage() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
+  const [captchaToken, setCaptchaToken] = useState(null);
   const photoInputRef = useRef(null);
+  const captchaRef = useRef(null);
 
   // ── Toast auto-dismiss ───────────────────────────────────────────────────────
 
@@ -136,7 +141,7 @@ function InscriptionPage() {
 
     if (!fields.email.trim()) {
       errs.email = 'Email requis.';
-    } else if (!/\S+@\S+\.\S+/.test(fields.email)) {
+    } else if (/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(fields.email)) {
       errs.email = 'Format email invalide.';
     }
     if (!fields.metier.trim()) errs.metier = 'Métier requis.';
@@ -149,6 +154,7 @@ function InscriptionPage() {
       errs.bio = 'Minimum 50 caractères.';
     }
     if (!fields.consent) errs.consent = 'Consentement requis.';
+    if (!captchaToken) errs.captcha = 'Veuillez cocher le CAPTCHA pour confirmer que vous n\êtes pas un robot.';
     return errs;
   }
 
@@ -229,6 +235,8 @@ function InscriptionPage() {
       });
       setSubmitted(true);
     } catch {
+      captchaRef.current?.reset();
+      setCaptchaToken(null);
       setToast('Une erreur est survenue. Veuillez réessayer ou contacter le webmaster.');
     } finally {
       setLoading(false);
@@ -509,14 +517,15 @@ function InscriptionPage() {
                     <label className="font-sans text-xs font-semibold text-ink mb-1 block" htmlFor="telephone">
                       Mobile{opt}
                     </label>
-                    <input
-                      id="telephone"
-                      name="telephone"
-                      type="tel"
+                    <PhoneInput
+                      country="mg"
                       value={fields.telephone}
-                      onChange={handleField}
-                      className={INPUT_CLS}
-                      placeholder="+261 34 00 002 00"
+                      onChange={value => setFields(f => ({ ...f, telephone: value }))}
+                      containerClass="w-full"
+                      inputProps={{ id: 'telephone', name: 'telephone' }}
+                      inputStyle={{ width: '100%', borderColor: '#F5E6C8', color: '#1A1108', fontSize: '0.875rem', fontFamily: '"DM Sans", sans-serif', backgroundColor: '#fff', borderRadius: '0 0.5rem 0.5rem 0' }}
+                      buttonStyle={{ borderColor: '#F5E6C8', backgroundColor: '#fff', borderRadius: '0.5rem 0 0 0.5rem' }}
+                      enableSearch={true}
                     />
                   </div>
                 </div>
@@ -527,14 +536,15 @@ function InscriptionPage() {
                     <label className="font-sans text-xs font-semibold text-ink mb-1 block" htmlFor="whatsapp">
                       Whatsapp{opt}
                     </label>
-                    <input
-                      id="whatsapp"
-                      name="whatsapp"
-                      type="url"
+                    <PhoneInput
+                      country="mg"
                       value={fields.whatsapp}
-                      onChange={handleField}
-                      className={INPUT_CLS}
-                      placeholder="+261 34 00 002 00"
+                      onChange={value => setFields(f => ({ ...f, whatsapp: value }))}
+                      containerClass="w-full"
+                      inputProps={{ id: 'whatsapp', name: 'whatsapp' }}
+                      inputStyle={{ width: '100%', borderColor: '#F5E6C8', color: '#1A1108', fontSize: '0.875rem', fontFamily: '"DM Sans", sans-serif', backgroundColor: '#fff', borderRadius: '0 0.5rem 0.5rem 0' }}
+                      buttonStyle={{ borderColor: '#F5E6C8', backgroundColor: '#fff', borderRadius: '0.5rem 0 0 0.5rem' }}
+                      enableSearch={true}
                     />
                   </div>
                   <div>
@@ -783,6 +793,18 @@ function InscriptionPage() {
           {errors.consent && (
             <p className="font-sans text-xs text-terracotta">{errors.consent}</p>
           )}
+
+          <div>
+            <ReCAPTCHA
+              ref={captchaRef}
+              sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
+              onChange={token => setCaptchaToken(token)}
+              onExpired={() => setCaptchaToken(null)}
+            />
+            {errors.captcha && (
+              <p className="font-sans text-xs text-terracotta mt-1">{errors.captcha}</p>
+            )}
+          </div>
 
           <div className="flex items-center gap-4">
             <button

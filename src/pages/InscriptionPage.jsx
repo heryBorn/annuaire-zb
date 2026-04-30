@@ -138,10 +138,11 @@ function InscriptionPage() {
     if (!fields.universite.trim()) errs.universite = 'Université requise.';
     if (!fields.etablissement.trim()) errs.etablissement = 'Etablissement requis.';
     if (!fields.niveau) errs.niveau = 'Niveau requis.';
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     if (!fields.email.trim()) {
       errs.email = 'Email requis.';
-    } else if (/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(fields.email)) {
+    } else if (!regex.test(fields.email)) {
       errs.email = 'Format email invalide.';
     }
     if (!fields.metier.trim()) errs.metier = 'Métier requis.';

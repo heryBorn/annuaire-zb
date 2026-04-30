@@ -402,7 +402,7 @@ function InscriptionPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="font-sans text-xs font-semibold text-ink mb-1 block" htmlFor="prenom">
-                      Prénom <span className="text-terracotta">*</span>
+                      Prénoms <span className="text-terracotta">*</span>
                     </label>
                     <input
                       id="prenom"
@@ -615,9 +615,10 @@ function InscriptionPage() {
                       type="text"
                       value={fields.district}
                       onChange={handleField}
-                      className={INPUT_CLS}
+                      className={errors.district ? INPUT_ERR_CLS : INPUT_CLS}
                       placeholder="Ex : Tsiroanomandidy"
                     />
+                    <FieldError name="district" />
                   </div>
                 </div>
               </div>
@@ -646,7 +647,7 @@ function InscriptionPage() {
                   </div>
                   <div>
                     <label className="font-sans text-xs font-semibold text-ink mb-1 block" htmlFor="entreprise">
-                      Entreprise / Etablissement <span className="text-terracotta">*</span>
+                      Entreprise / Etablissement
                     </label>
                     <input
                       id="entreprise"
@@ -747,9 +748,10 @@ function InscriptionPage() {
                       type="text"
                       value={fields.etablissement}
                       onChange={handleField}
-                      className={INPUT_CLS}
+                      className={errors.etablissement ? INPUT_ERR_CLS : INPUT_CLS}
                       placeholder="Ex : ESPA, ESSA..."
                     />
+                    <FieldError name="etablissement" />
                   </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

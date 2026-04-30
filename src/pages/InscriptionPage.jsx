@@ -527,6 +527,7 @@ function InscriptionPage() {
                       inputStyle={{ width: '100%', borderColor: '#F5E6C8', color: '#1A1108', fontSize: '0.875rem', fontFamily: '"DM Sans", sans-serif', backgroundColor: '#fff', borderRadius: '0 0.5rem 0.5rem 0' }}
                       buttonStyle={{ borderColor: '#F5E6C8', backgroundColor: '#fff', borderRadius: '0.5rem 0 0 0.5rem' }}
                       enableSearch={true}
+                      countryCodeEditable={false}
                     />
                   </div>
                 </div>
@@ -546,6 +547,7 @@ function InscriptionPage() {
                       inputStyle={{ width: '100%', borderColor: '#F5E6C8', color: '#1A1108', fontSize: '0.875rem', fontFamily: '"DM Sans", sans-serif', backgroundColor: '#fff', borderRadius: '0 0.5rem 0.5rem 0' }}
                       buttonStyle={{ borderColor: '#F5E6C8', backgroundColor: '#fff', borderRadius: '0.5rem 0 0 0.5rem' }}
                       enableSearch={true}
+                      countryCodeEditable={false}
                     />
                   </div>
                   <div>
